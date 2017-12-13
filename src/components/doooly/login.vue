@@ -42,7 +42,8 @@
             </div>
           </article>
           <div class="btn_div_d">
-            <div @click="accountLogin" class="logo_btn btn" :disabled="log2Disable" id="log2_dl" :class="classObject2">{{this.loginText2}}
+            <div @click="accountLogin" class="logo_btn btn" :disabled="log2Disable" id="log2_dl" :class="classObject2">
+              {{this.loginText2}}
             </div>
           </div>
         </div>
@@ -63,62 +64,6 @@
       </div>
     </footer>
 
-
-    <!-- 弹出框 start -->
-    <div class="coverBg"></div>
-    <!-- 账号不存在 start -->
-    <div class="alt_nonentity" style="padding-bottom:0;">
-      <div class="alt_title">账号不存在</div>
-      <div class="model_con">此手机号未被激活，无法享受兜礼服务， 是否通过验证激活方式来激活会员账户</div>
-      <div class="model_btn_div">
-        <button type="button" onclick="cancelBtn()" class="cancel">取消</button>
-        <button type="button" onclick="confirmBtn()" class="active">激活</button>
-      </div>
-    </div>
-    <!-- 提示信息 start -->
-    <div class="alt_tate" style="padding-bottom:0;">
-      <div class="alt_title">提示</div>
-      <div class="model_con" id="model_msg"></div>
-      <div class="model_btn_div">
-        <button type="button" onclick="cancelBtn()" class="btn_bottom">确定</button>
-      </div>
-    </div>
-    <!-- 弹出框 end -->
-    <!-- 提交成功 start -->
-    <div class="alt_succeed" style="padding-bottom:0;">
-      <div class="alt_title">等待激活</div>
-      <div class="model_con" id="model_msg_s"></div>
-      <div class="model_btn_div">
-        <button type="button" onclick="cancelBtn()" class="btn_bottom">确定</button>
-      </div>
-    </div>
-    <!-- 提交成功 end -->
-    <!-- 密码错误 start -->
-    <div class="alt1">
-      <div class="alt_title">密码错误</div>
-      <p>是否找回密码</p>
-      <div class="btn_div">
-        <input type="button" class="cancel" value="否" onclick="cancelBtn()"/>
-        <input type="button" class="active" value="是" onclick="confirmFindPSW()"/>
-      </div>
-    </div>
-    <!-- 账号异常 start -->
-    <div class="alt2">
-      <p>亲爱的会员，您的账号存在异常，请拨打客服电话“400-158-2212”进行处理 (周一至周五, 9:00AM-6:00PM)</p>
-      <div class="btn_div">
-        <input type="button" class="cancel" value="取消" onclick="cancelBtn()"/>
-        <input type="button" class="appDial active" value="立即拨打" onclick="dialPhone()"/>
-        <a class="dial active" href="tel:4001582212">立即拨打</a>
-      </div>
-    </div>
-    <div class="alt3">
-      <p>请退出当前账户</p>
-      <div class="btn_div">
-        <input type="button" class="active" value="确定" onclick="cancelBtn()"/>
-      </div>
-    </div>
-
-
   </div>
 </template>
 
@@ -126,7 +71,7 @@
 
   // import {checkmobile} from '@/assets/js/checkIdentityAndMobile';
   import http from '@/http/http.js'
-  import { MessageBox } from 'mint-ui';
+  import {MessageBox} from 'mint-ui';
 
   export default {
     name: "login",
@@ -134,41 +79,30 @@
       return {
         headerImgSrc: 'http://test1.doooly.com/resources/wechat/images/staff_a/logo_header.jpg',
         mobileState: true,
-        // log1Disable:true,
-        // log2Disable:true,
         mobileNum: "",
         accountNum: "",
         validCodeNum: "",
         passwordNum: "",
-        // classObject1: {
-        //   dis_btn: true,
-        //   click_btn: false
-        // },
-        // classObject2: {
-        //   dis_btn: true,
-        //   click_btn: false
-        // }
         codeState: true,
-        //     disableRegainCode:true,
         timeNum: 60,
         loginText: "登录",
-        loginText2:"登录",
+        loginText2: "登录",
         isLoading: false,
         isLoading2: false,
       }
     },
     computed: {
-
+//log1 登录状态控制
       log1Disable: function () {
         if ((this.mobileNum == "" || this.validCodeNum == "") || this.isLoading) {
-          //
-          // console.log(111111111);
           return true
         }
         else {
           return false
         }
       },
+
+//log2 登录状态控制
       log2Disable: function () {
         if ((this.accountNum == "" || this.passwordNum == "") || this.isLoading2) {
           return true
@@ -177,6 +111,8 @@
           return false
         }
       },
+
+      //log1 登录样式控制
       classObject1: function () {
         if ((this.mobileNum != "" && this.validCodeNum != "") && !this.isLoading) {
           return {
@@ -193,6 +129,7 @@
         }
 
       },
+      //log2 登录样式控制
       classObject2: function () {
         if (this.accountNum != "" && this.passwordNum != "" && !this.isLoading2) {
           return {
@@ -214,7 +151,7 @@
     methods: {
 
       //账号不存在
-      altNonentity(){
+      altNonentity() {
         MessageBox({
           title: '账号不存在',
           message: '此手机号未被激活，无法享受兜礼服务， 是否通过验证激活方式来激活会员账户',
@@ -224,59 +161,55 @@
         });
       },
       //退出当前账户
-      altQuit(){
+      altQuit() {
         MessageBox('请退出当前账户');
       },
 
       //等待激活
-      altAwaitActive(date){
-        MessageBox('等待激活', '您已经在'+date+'提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)');
+      altAwaitActive(date) {
+        MessageBox('等待激活', '您已经在' + date + '提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)');
       },
 
       //审核未通过
-      altUnapprove(){
-        MessageBox('提示','很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！');
+      altUnapprove() {
+        MessageBox('提示', '很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！');
       },
 
       //密码错误
-      altPwdError(){
+      altPwdError() {
         MessageBox({
           title: '密码错误',
           message: '是否找回密码',
-          confirmButtonText:'是',
+          confirmButtonText: '是',
           cancelButtonText: '否',
           showCancelButton: true
         });
       },
 
       //账号异常
-      altAccountError(){
+      altAccountError() {
         MessageBox({
           title: '账号异常',
           message: '亲爱的会员，您的账号存在异常，请拨打客服电话“400-158-2212”进行处理 (周一至周五, 9:00AM-6:00PM)',
-          confirmButtonText:'立即拨打',
+          confirmButtonText: '立即拨打',
           cancelButtonText: '取消',
           showCancelButton: true
         });
       },
       //各种异常处理
-      altAllError(){
+      altAllError() {
         MessageBox({
           title: '提示',
           message: '亲爱的会员，您的账号存在异常，请拨打客服电话“400-158-2212”进行处理 (周一至周五, 9:00AM-6:00PM)',
           confirmButtonText: '立即拨打',
           cancelButtonText: '取消',
           showCancelButton: true
-        }).then(({ value, action }) => {
+        }).then(({value, action}) => {
           console.log(value)
         });
       },
-
-
       changeLogin() {
-
         this.mobileState = !this.mobileState
-
       },
       focusinMethod() {
         this.headerImgSrc = 'http://test1.doooly.com/resources/wechat/images/staff_a/logo_header_small.jpg'
@@ -286,43 +219,31 @@
       },
       checkMobile() {
         let re = /^1[3|4|5|7|8][0-9]{9}$/;
-
         if (this.mobileNum == "") {
           this.$toast("手机号不能为空");
           return false;
         }
         else if (!re.test(this.mobileNum) || this.mobileNum.length != 11) {
-
-
-          //alert("手机号格式错误！");
           this.$toast("手机号格式错误！");
           return false;
         }
         else {
-
           return true;
         }
-
       },
       checkAccout() {
         let re = /^1[3|4|5|7|8][0-9]{9}$/;
-
         if (this.accountNum == "") {
           this.$toast("账号不能为空");
           return false;
         }
         else if (!re.test(this.accountNum) || this.accountNum.length != 11) {
-
-
-          //alert("手机号格式错误！");
           this.$toast("手机号格式错误！");
           return false;
         }
         else {
-
           return true;
         }
-
       },
       timingCode() {
 
@@ -340,17 +261,6 @@
           }
         }, 1000)
       },
-      // var interval = setInterval(function() {
-      //   node.text(num+"s后重新获取");
-      //   --num;
-      //   if (num == 0) {
-      //     clearInterval(interval);
-      //     $("#hq").addClass("code_btn_txt").removeClass("code_btn_d");
-      //     node.text('获取验证码');
-      //     $('#hq').attr('disabled', false);
-      //     xnum = 0;
-      //   }
-      // }, 1000);
 
       getValidCode() {
         if (this.checkMobile() == false) {
@@ -368,8 +278,8 @@
             }
           }).then(
             (res) => {
-            //  console.log(11111111111111)
-           //   console.log(res)
+              //  console.log(11111111111111)
+              //   console.log(res)
 
               if (res.data.code == "1000") {
                 this.codeState = !this.codeState;
@@ -389,69 +299,70 @@
                     }
 
 
-                   // console.log(res.data);
-                   // console.log(3333333333)
+                    // console.log(res.data);
+                    // console.log(3333333333)
                   }
                 ).catch((error) => {
-                 // console.log(44444444444)
-                 // console.log(res.data)
+                  // console.log(44444444444)
+                  // console.log(res.data)
                   this.$toast("服务器异常");
                 })
 
 
               }
               else {
-                 if(res.data.code == "1010"){
-                   // MessageBox({
-                   //   title: '等待激活',
-                   //   message: '您已经在'+data.date+'提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)',
-                   //   showCancelButton: true
-                   // });
-                   this.altAwaitActive(res.data.date);
-                 }
-                 else if(res.data.code == "1011"){
-                   // MessageBox({
-                   //   title: '提示',
-                   //   message: '很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！',
-                   //   showCancelButton: true
-                   // });
-                   this.altUnapprove();
-                 }
-                 else if (res.data.code == "1004") {
-                   this.altNonentity();
-                 }
-                 else if(res.data.code == "1003"){
-                   // MessageBox({
-                   //   title: '提示',
-                   //   message: '请退出当前账户',
-                   //   showCancelButton: true
-                   // });
-                   this.altQuit()
-                 }
-                 else if(res.data.code == "1008"){
-                   MessageBox({
-                     title: '提示',
-                     message: '验证码错误',
-                     showCancelButton: true
-                   });
-                 }
-                 else{
-                   this.altAllError();
-                 }
+                if (res.data.code == "1010") {
+                  // MessageBox({
+                  //   title: '等待激活',
+                  //   message: '您已经在'+data.date+'提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)',
+                  //   showCancelButton: true
+                  // });
+                  this.altAwaitActive(res.data.date);
+                }
+                else if (res.data.code == "1011") {
+                  // MessageBox({
+                  //   title: '提示',
+                  //   message: '很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！',
+                  //   showCancelButton: true
+                  // });
+                  this.altUnapprove();
+                }
+                else if (res.data.code == "1004") {
+                  this.altNonentity();
+                }
+                else if (res.data.code == "1003") {
+                  // MessageBox({
+                  //   title: '提示',
+                  //   message: '请退出当前账户',
+                  //   showCancelButton: true
+                  // });
+                  this.altQuit()
+                }
+                else if (res.data.code == "1008") {
+                  MessageBox({
+                    title: '提示',
+                    message: '验证码错误',
+                    showCancelButton: true
+                  });
+                }
+                else {
+                  this.altAllError();
+                }
 
               }
 
             }
           ).catch((error) => {
               this.$toast("服务器异常");
-              console.log(66666666666)
-            console.log(error)
+              console.log(error)
             }
           );
         }
 
 
       },
+
+      //手机号登录
       mobileLogin() {
         if (this.checkMobile() == false) {
           return false;
@@ -462,16 +373,17 @@
         }
         this.loginText = "登录中";
         this.isLoading = true;
-        console.log(333333333333)
         http({
           method: 'post',
           url: '/reachtest/wechat/register/checkcode.jhtml',
           data: {
             mobile: this.mobileNum,
-            code:this.validCodeNum
+            code: this.validCodeNum
           }
         }).then(
           (res) => {
+
+
             if (res.data.code == 1001) {
 
               http({
@@ -482,36 +394,25 @@
                 }
               }).then(
                 (res) => {
-                 console.log(999);
-                //console.log(res);
-                  //var browserName=getBrowser();
-                  //console.log(browserName)
                   let parser = new UAParser();
-                  let browserName=parser.getBrowser();
+                  let browserName = parser.getBrowser();
                   console.log(browserName)
-
-                  let token=res.data.token;
-
+                  let token = res.data.token;
                   if (res.data.code == "1000") {
-
-
                     if (browserName == "WeChat") {
                       this.$router.push('home')
-
-
                     }
-                    else if(browserName=="WebKit"){
-                      var str=res.data.userInfo;
-                      var userInfo=JSON.parse(str);
-                      var params={"userInfo":userInfo.adUserConn,"type":"0","token":token}
+                    else if (browserName == "WebKit") {
+                      var str = res.data.userInfo;
+                      var userInfo = JSON.parse(str);
+                      var params = {"userInfo": userInfo.adUserConn, "type": "0", "token": token};
                       window.webkit.messageHandlers.nativeUserInfomation.postMessage(params);
-                      //nativeUserInfomation(loginData.userInfo,"0", loginData.token);
                     }
-                    else if(browserName=="Chrome WebView"){
-                      RHNativeJS.nativeUserInfomation(res.data.userInfo,"0",token);
+                    else if (browserName == "Chrome WebView") {
+                      RHNativeJS.nativeUserInfomation(res.data.userInfo, "0", token);
                     }
-                    else{
-                     // var token=loginData.token;
+                    else {
+                      // var token=loginData.token;
                       localStorage.token = token;
                       // [#if redirectUrl??]
                       // location.href = "${redirectUrl}?token="+token;
@@ -520,8 +421,70 @@
                       // location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                       // [/#if]
 
-                      this.$router.push({path:'/home/'+token})
+                      this.$router.push({path: '/home/' + token})
                     }
+
+                  }
+                  else {
+                    if (res.data.code == "1004") {
+                      this.altNonentity();
+                    }
+                    else if (res.data.code == "1003") {
+                      this.altQuit();
+                    }
+                    else if (res.data.code == "1006") {
+                      if (browserName == "WeChat") {
+                        var timestamp = Date.parse(new Date());
+                        if (timestamp < 1510416000000) {
+                          // [#if redirectUrl??]
+                          // location.href = "${redirectUrl}";
+                          // [#else]
+                          // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
+                          // //location.href ="${base}/doooly/home/index.jhtml?address=";
+                          // [/#if]
+                          alert('请更新个人信息！1')
+
+                        } else {
+                          //location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
+                          alert('请更新个人信息！2')
+                        }
+                      }
+                      else if (browserName == "WebKit") {
+                        var str = res.data.userInfo;
+                        var userInfo = JSON.parse(str);
+                        var params = {"userInfo": userInfo.adUserConn, "type": "1", "token": token}
+                        window.webkit.messageHandlers.nativeUserInfomation.postMessage(params);
+                        //window.webkit.messageHandlers.nativeUserInfomation.postMessage(res.data.userInfo,"1", res.data.token);
+                        //nativeUserInfomation(res.data.mess,"1", res.data.token);
+                      }
+                      else if (browserName == "Chrome WebView") {
+                        RHNativeJS.nativeUserInfomation(res.data.userInfo, "1", token);
+                      }
+                      else {
+
+                        //localStorage.token = token;
+                        // [#if redirectUrl??]
+                        // location.href = "${redirectUrl}?token="+token;
+                        // [#else]
+                        // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml?token="+token;
+                        // [/#if]
+                        alert("请更新个人信息！3")
+                      }
+                    }
+                    else if (res.data.code == "1010") {
+                      this.altAwaitActive(res.data.date);
+                    } else if (res.data.code == "1011") {
+                      this.altUnapprove();
+                    }
+                    else if (res.data.code == "1008") {
+                      this.altPwdError();
+                    }
+                    else {
+                      this.altAccountError();
+
+                    }
+                    this.loginText = "登录";
+                    this.isLoading = false;
 
                   }
                 }).catch((error) => {
@@ -530,75 +493,23 @@
               )
 
             }
-            else{
-              if (res.data.code == "1004") {
-                this.altNonentity();
-              }
-              else if(res.data.code == "1003"){
-              this.altQuit();
-              }
-              else if(res.data.code == "1006"){
-                if(browserName=="WeChat"){
-                  var timestamp = Date.parse(new Date());
-                  if(timestamp < 1510416000000){
-                    // [#if redirectUrl??]
-                    // location.href = "${redirectUrl}";
-                    // [#else]
-                    // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
-                    // //location.href ="${base}/doooly/home/index.jhtml?address=";
-                    // [/#if]
-                      alert('请更新个人信息！1')
-
-                  }else{
-                    //location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
-                    alert('请更新个人信息！2')
-                  }
-                }
-                else if(browserName=="WebKit"){
-                  var str=res.data.userInfo;
-                  var userInfo=  JSON.parse(str);
-                  var params={"userInfo":userInfo.adUserConn,"type":"1","token":token}
-                  window.webkit.messageHandlers.nativeUserInfomation.postMessage(params);
-                  //window.webkit.messageHandlers.nativeUserInfomation.postMessage(res.data.userInfo,"1", res.data.token);
-                  //nativeUserInfomation(res.data.mess,"1", res.data.token);
-                }
-                else if(browserName=="Chrome WebView"){
-                  RHNativeJS.nativeUserInfomation(res.data.userInfo,"1",token);
-                }
-                else{
-
-                  //localStorage.token = token;
-                  // [#if redirectUrl??]
-                  // location.href = "${redirectUrl}?token="+token;
-                  // [#else]
-                  // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml?token="+token;
-                  // [/#if]
-                  alert("请更新个人信息！3")
-                }
-              }
-              else if(res.data.code == "1010"){
-                this.altAwaitActive(res.data.date);
-              }else if(res.data.code == "1011"){
-                this.altUnapprove();
-              }
-              else if(res.data.code == "1008"){
-                this.altPwdError();
-              }
-              else{
-                this.altAccountError();
-              }
-
+            else {
+              this.loginText = "登录";
+              this.isLoading = false;
+              this.$toast(res.data.msg.content);
             }
 
 
           }).catch((error) => {
-            console.log(error)
-          })
-
+          //console.log(error);
+          this.loginText = "登录";
+          this.isLoading = false;
+          this.$toast("服务异常，请稍后再试");
+        })
 
 
       },
-      accountLogin(){
+      accountLogin() {
         if (this.checkAccout() == false) {
           return false;
         }
@@ -609,7 +520,7 @@
         this.loginText2 = "登录中";
         this.isLoading2 = true;
         let rsaKey = new RSAKey();
-       // console.log(rsaKey);
+        // console.log(rsaKey);
 
 
         http({
@@ -619,8 +530,8 @@
           //   mobile: this.accountNum,
           //   code:enPassword
           // }
-        }).then((res)=>{
-          rsaKey.setPublic(b64tohex(res.data.modulus),b64tohex(res.data.exponent));
+        }).then((res) => {
+          rsaKey.setPublic(b64tohex(res.data.modulus), b64tohex(res.data.exponent));
           let enPassword = hex2b64(rsaKey.encrypt(this.passwordNum));
           console.log(enPassword);
 
@@ -629,55 +540,110 @@
             url: '/reachtest/wechat/login/submit.jhtml',
             data: {
               username: this.accountNum,
-              enPassword:enPassword
+              enPassword: enPassword
             }
-          }).then((res)=>{
+          }).then((res) => {
             console.log(res.data);
             console.log(10101010);
             let parser = new UAParser();
-            let browserName=parser.getBrowser();
-            let token=res.data.token;
+            let browserName = parser.getBrowser();
+            let token = res.data.token;
 
             if (res.data.code == "1000") {
-              if(browserName=="WeChat"){
+              if (browserName == "WeChat") {
                 // [#if redirectUrl??]
                 // location.href = "${redirectUrl}";
                 // [#else]
                 // location.href ="${base}/wechat/home/index.jhtml?address=";
                 // [/#if]
               }
-              else if(browserName=="WebKit"){
+              else if (browserName == "WebKit") {
                 //判断iPhone|iPad|iPod|iOS
-                var str=res.data.userInfo;
-                var userInfo=  JSON.parse(str);
-                var param={"userInfo":userInfo.adUserConn,"type":"0","token":token}
+                var str = res.data.userInfo;
+                var userInfo = JSON.parse(str);
+                var param = {"userInfo": userInfo.adUserConn, "type": "0", "token": token}
                 window.webkit.res.dataHandlers.nativeUserInfomation.postres.data(param);
               }
-              else if(browserName=="Chrome WebView"){
+              else if (browserName == "Chrome WebView") {
                 //判断Android
-                RHNativeJS.nativeUserInfomation(res.data.userInfo,"0",token);
+                RHNativeJS.nativeUserInfomation(res.data.userInfo, "0", token);
               }
-              else{
-               // var token=res.data.token;
-               //  localStorage.token = token;
-               //  [#if redirectUrl??]
-               //  location.href = "${redirectUrl}?token="+token;
-               //  [#else]
-               //  location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
-               //  [/#if]
-                this.$router.push({path:'/home/'+token})
+              else {
+                // var token=res.data.token;
+                //  localStorage.token = token;
+                //  [#if redirectUrl??]
+                //  location.href = "${redirectUrl}?token="+token;
+                //  [#else]
+                //  location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
+                //  [/#if]
+                this.$router.push({path: '/home/' + token})
               }
             }
+            else {
+              //用户信息不存在，提示是否去激活
+              if (res.data.code == "1004") {
+                this.altNonentity();
+              }
+              else if (res.data.code == "1003") {
+                this.altQuit();
+              }
+              else if (res.data.code == "1006") {
+                if (browserName == "WeChat") {
+                  var timestamp = Date.parse(new Date());
+                  if (timestamp < 1510416000000) {
+                    // [#if redirectUrl??]
+                    // location.href = "${redirectUrl}";
+                    // [#else]
+                    // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
+                    //
+                    // [/#if]
 
+                    alert("更新个人资料11")
+                  } else {
+                    // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
+                    alert("更新个人资料22");
+                  }
+                }
+                else if (browserName == "WebKit") {
+                  //alert("ios");
+                  var str = res.data.userInfo;
+                  var userInfo = JSON.parse(str);
+                  var params = {"userInfo": userInfo.adUserConn, "type": "1", "token": token}
+                  window.webkit.res.dataHandlers.nativeUserInfomation.postres.data(params);
+                }
+                else if (browserName == "Chrome WebView") {
+                  RHNativeJS.nativeUserInfomation(res.data.userInfo, "1", token);
+                }
+                else {
+                  // var token=res.data.token;
+                  // localStorage.token = token;
+                  // [#if redirectUrl??]
+                  // location.href = "${redirectUrl}?token="+token;
+                  // [#else]
+                  // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml?token="+token;
+                  // [/#if]
+                  alert("improvePersonalData");
+                }
+              }
+              else if (res.data.code == "1010") {
+                this.altAwaitActive(res.data.date);
+              }
+              else if (res.data.code == "1011") {
+                this.altUnapprove();
+              }
+              else if (res.data.code == "1008") {
+                this.altPwdError();
 
+              }
+              else {
+                this.altAccountError();
+                // this.loginText2 = "登录";
+                // this.isLoading2 = false;
+              }
+              this.loginText2 = "登录";
+              this.isLoading2 = false;
 
-
-
-
-
-
-
-
+            }
 
 
           }).catch((error) => {
@@ -686,6 +652,8 @@
 
         }).catch((error) => {
           console.log(error)
+          this.loginText2 = "登录";
+          this.isLoading2 = false;
         })
 
 
