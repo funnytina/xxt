@@ -8,7 +8,7 @@
         <div id="log1" v-if="mobileState">
           <article class="clearfix tel">
             <div class="index_div">
-              <input type="tel" v-model="mobileNum" class="form-control" maxlength="11" id="loginMobile"
+              <input type="tel" v-model="mobileNum" class="form-control" maxlength="11"
                      name="loginMobile" placeholder="请输入手机号码">
             </div>
           </article>
@@ -28,7 +28,7 @@
             </button>
           </div>
         </div>
-        <div id="log2" v-if="!mobileState">
+        <div id="log2" v-if="accountState">
           <article class="clearfix man">
             <div class="index_div">
               <input type="tel" v-model="accountNum" maxlength="11" minlength="11" class="form-control" id="username"
@@ -47,12 +47,14 @@
             </div>
           </div>
         </div>
+
+
       </form>
       <div class="deal_div">
         <div class="fl"><a href="/reachtest/wechat/activation/getUserProtocol.jhtml">用户登录即代表同意<span>《用户协议》</span></a>
         </div>
         <div class="fr">
-          <div class="disableCss" id="btn_pwd" v-if="!mobileState">忘记密码？</div>
+          <div @click="forgetPwd" class="disableCss" id="btn_pwd" v-if="!mobileState">忘记密码？</div>
         </div>
       </div>
     </section>
@@ -72,6 +74,8 @@
   // import {checkmobile} from '@/assets/js/checkIdentityAndMobile';
   import http from '@/http/http.js'
   import {MessageBox} from 'mint-ui';
+  import Cookies from 'js-cookie';
+  import api from '@/assets/js/api.js';
 
   export default {
     name: "login",
@@ -89,6 +93,7 @@
         loginText2: "登录",
         isLoading: false,
         isLoading2: false,
+        accountState: false,
       }
     },
     computed: {
@@ -101,6 +106,8 @@
           return false
         }
       },
+
+
 
 //log2 登录状态控制
       log2Disable: function () {
@@ -129,6 +136,8 @@
         }
 
       },
+
+
       //log2 登录样式控制
       classObject2: function () {
         if (this.accountNum != "" && this.passwordNum != "" && !this.isLoading2) {
@@ -150,6 +159,15 @@
 
     methods: {
 
+      //拨打电话
+      mobileCall(){
+        window.location.href = 'tel://400-151-1111';
+        console.log(121);
+      //  console.log(api);
+        console.log(isWeiXin());
+      },
+
+
       //账号不存在
       altNonentity() {
         MessageBox({
@@ -158,8 +176,13 @@
           confirmButtonText: '激活',
           cancelButtonText: '取消',
           showCancelButton: true
+        }).then(({value, action}) => {
+          this.mobileCall();
         });
       },
+
+
+
       //退出当前账户
       altQuit() {
         MessageBox('请退出当前账户');
@@ -194,6 +217,8 @@
           confirmButtonText: '立即拨打',
           cancelButtonText: '取消',
           showCancelButton: true
+        }).then(({value, action}) => {
+          this.mobileCall();
         });
       },
       //各种异常处理
@@ -205,11 +230,12 @@
           cancelButtonText: '取消',
           showCancelButton: true
         }).then(({value, action}) => {
-          console.log(value)
-        });
+          this.mobileCall();
+        })
       },
       changeLogin() {
-        this.mobileState = !this.mobileState
+        this.mobileState = !this.mobileState;
+        this.accountState = !this.accountState;
       },
       focusinMethod() {
         this.headerImgSrc = 'http://test1.doooly.com/resources/wechat/images/staff_a/logo_header_small.jpg'
@@ -245,34 +271,66 @@
           return true;
         }
       },
+
+
       timingCode() {
 
-        var interval = setInterval(() => {
-          // console.log(this.timeNum)
+          this.codeState = !this.codeState;
+          let interval = setInterval(() => {
+            if (this.timeNum > 0 && this.timeNum <= 60) {
+              this.timeNum--;
+            }
+            else if (this.timeNum == 0) {
+              clearInterval(interval);
+              this.timeNum = 60;
+            }
+          }, 1000)
+         this.codeState = !this.codeState;
 
 
-          if (this.timeNum > 0 && this.timeNum <= 60) {
-            this.timeNum--;
-          }
-          else if (this.timeNum == 0) {
-            clearInterval(interval);
-            this.codeState = !this.codeState;
-            this.timeNum = 60;
-          }
-        }, 1000)
+        // let interval = setInterval(() => {
+        //   if (this.timeNum > 0 && this.timeNum <= 60) {
+        //     this.timeNum--;
+        //   }
+        //   else if (this.timeNum == 0) {
+        //     clearInterval(interval);
+        //     this.codeState = !this.codeState;
+        //     this.timeNum = 60;
+        //   }
+        // }, 1000)
+        // let interval = setInterval((timeNum) => {
+        //   console.log(this);
+        //   console.log(timeNum);
+        //   // console.log(timeNum)
+        //   if (timeNum > 0 && timeNum <= 60) {
+        //     timeNum--;
+        //     console.log(timeNum);
+        //   }
+        //   else if (timeNum == 0) {
+        //     clearInterval(interval);
+        //     this.codeState = !this.codeState;
+        //     timeNum = 60;
+        //   }
+        // }, 1000)
+
       },
 
       getValidCode() {
-        if (this.checkMobile() == false) {
-          return false;
-        }
-        else {
-          //console.log(this.checkMobile())
-          //this.codeState = !this.codeState;
-          //this.timingCode();
+
+
+        //console.log(this.checkMobile())
+        //this.codeState = !this.codeState;
+        //this.timingCode();
+      //  this.pwdInterface == api.checkMobile
+
+
+          if (this.checkMobile() == false) {
+            return false;
+          }
+
           http({
             method: 'post',
-            url: '/reachtest/doooly/login/checkMobile.jhtml',
+            url: api.checkMobile,
             data: {
               mobile: this.mobileNum
             }
@@ -282,11 +340,13 @@
               //   console.log(res)
 
               if (res.data.code == "1000") {
-                this.codeState = !this.codeState;
+
+
+                //  this.codeState = !this.codeState;
 
                 http({
                   method: 'post',
-                  url: '/reachtest/wechat/register/getLoginVCode.jhtml',
+                  url: api.getLoginVCode,
                   data: {
                     mobile: this.mobileNum
                   }
@@ -296,8 +356,8 @@
                     if (res.data.code == 1001 || res.data.code == 1006) {
                       this.timingCode();
 
-                    }
 
+                    }
 
                     // console.log(res.data);
                     // console.log(3333333333)
@@ -356,8 +416,9 @@
               this.$toast("服务器异常");
               console.log(error)
             }
-          );
-        }
+          )
+
+
 
 
       },
@@ -375,7 +436,7 @@
         this.isLoading = true;
         http({
           method: 'post',
-          url: '/reachtest/wechat/register/checkcode.jhtml',
+          url: api.checkcode,
           data: {
             mobile: this.mobileNum,
             code: this.validCodeNum
@@ -388,19 +449,19 @@
 
               http({
                 method: 'post',
-                url: '/reachtest/wechat/login/telLogin.jhtml',
+                url: api.telLogin,
                 data: {
                   mobile: this.mobileNum
                 }
               }).then(
                 (res) => {
-                  let parser = new UAParser();
-                  let browserName = parser.getBrowser();
-                  console.log(browserName)
+                  // let parser = new UAParser();
+                  let browserName = getBrowser();
+                  // console.log(browserName)
                   let token = res.data.token;
                   if (res.data.code == "1000") {
                     if (browserName == "WeChat") {
-                      this.$router.push('home')
+                      this.$router.push('home');
                     }
                     else if (browserName == "WebKit") {
                       var str = res.data.userInfo;
@@ -444,8 +505,18 @@
                           // [/#if]
                           alert('请更新个人信息！1')
 
+                          if(Cookies.get('redirectUrl')){
+                            this.$router.push({path: 'redirectUrl'})
+                          }
+                          else{
+                            this.$router.push('improvePersonalData');
+
+                          }
+
+
                         } else {
                           //location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
+                          this.$router.push('improvePersonalData');
                           alert('请更新个人信息！2')
                         }
                       }
@@ -509,6 +580,8 @@
 
 
       },
+
+      //卡号登录
       accountLogin() {
         if (this.checkAccout() == false) {
           return false;
@@ -525,7 +598,7 @@
 
         http({
           method: 'get',
-          url: '/reachtest/wechat/common/public_key.jhtml',
+          url: api.public_key,
           // data: {
           //   mobile: this.accountNum,
           //   code:enPassword
@@ -537,7 +610,7 @@
 
           http({
             method: 'post',
-            url: '/reachtest/wechat/login/submit.jhtml',
+            url: api.submit1,
             data: {
               username: this.accountNum,
               enPassword: enPassword
@@ -545,8 +618,8 @@
           }).then((res) => {
             console.log(res.data);
             console.log(10101010);
-            let parser = new UAParser();
-            let browserName = parser.getBrowser();
+            // let parser = new UAParser();
+            let browserName = getBrowser();
             let token = res.data.token;
 
             if (res.data.code == "1000") {
@@ -556,6 +629,17 @@
                 // [#else]
                 // location.href ="${base}/wechat/home/index.jhtml?address=";
                 // [/#if]
+
+                if(Cookies.get('redirectUrl')){
+                  this.$router.push({path: 'redirectUrl'})
+                }
+                else{
+                  this.$router.push('home');
+                }
+
+
+
+
               }
               else if (browserName == "WebKit") {
                 //判断iPhone|iPad|iPod|iOS
@@ -598,10 +682,20 @@
                     //
                     // [/#if]
 
-                    alert("更新个人资料11")
+                    if(Cookies.get('redirectUrl')){
+                      this.$router.push({path: 'redirectUrl'});
+                    }
+                    else{
+                      this.$router.push('improvePersonalData');
+
+                    }
+
+
+                   // alert("更新个人资料11")
                   } else {
                     // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
-                    alert("更新个人资料22");
+                    //alert("更新个人资料22");
+                    this.$router.push('improvePersonalData');
                   }
                 }
                 else if (browserName == "WebKit") {
@@ -657,7 +751,39 @@
         })
 
 
-      }
+      },
+
+      //忘记密码之安卓交互
+      // forgetPwdAndroid() {
+      //   // let jsonObj = {
+      //   //   "title": {"text": "忘记密码"},
+      //   //   "leftButton": {"name": "return", "text": "返回", "func": "goLastPage()", "visable": "true"},
+      //   //   "visable": "true"
+      //   // };
+      //   // let browserName = getBrowser();
+      //   // if (browserName == "WebKit") {
+      //   //   window.webkit.messageHandlers.initPageTitle.postMessage(JSON.stringify(jsonObj));
+      //   //   //  window.webkit.messageHandlers.getPhoneDeviceId.postMessage("phoneid");
+      //   // }
+      //   // else if (browserName == "Chrome WebView") {
+      //   //   RHNativeJS.initPageTitle(JSON.stringify(jsonObj));
+      //   //   RHNativeJS.hideWaitPanel();
+      //   //   //   RHNativeJS.getPhoneDeviceId("phoneid");
+      //   //   $('body').height($(window).height() + 150 + 'px');
+      //   //   $('body').css('height', '110%');
+      //   // }
+      //
+      // },
+
+      //点击忘记密码执行的函数
+      forgetPwd() {
+        this.$router.push('resetPassword');
+
+      },
+
+
+
+
 
     }
   }
@@ -811,111 +937,6 @@
     font-size: 0.24rem;
   }
 
-  .coverBg {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 9999;
-    display: none;
-  }
-
-  .alt, .alt1, .alt2, .alt3 {
-    position: absolute;
-    width: 6rem;
-    min-height: 3rem;
-    left: 10%;
-    top: 30%;
-    background: #fff;
-    border-radius: 0.2rem;
-    display: none;
-    z-index: 100000;
-    padding-bottom: 0.2rem;
-  }
-
-  .alt_title {
-    font-size: 0.32rem;
-    padding-bottom: 0.2rem;
-    width: 100%;
-    text-align: center;
-    background: #fff !important;
-    margin-top: 0.5rem;
-    font-weight: bold
-  }
-
-  .alt p, .alt1 p {
-    font-size: 0.28rem;
-    text-align: center;
-    width: 4.9rem;
-    margin: 0 auto;
-    color: #323232;
-    text-indent: 0 !important;
-  }
-
-  .alt2 p, .alt3 p {
-    font-size: 0.28rem;
-    text-align: center;
-    width: 80%;
-    margin: 0 auto;
-    margin-top: 0.5rem;
-    color: #323232;
-    text-indent: 0 !important;
-  }
-
-  .btn_div {
-    width: 100%;
-    text-align: center;
-    background: #fff !important;
-    margin-top: 0.5rem;
-    padding: 0;
-  }
-
-  .alt input, .alt1 input, .alt2 input, .alt3 input {
-    line-height: 0.5rem;
-    width: 1.6rem;
-    text-align: center;
-    border-radius: 0.1rem;
-    font-size: 0.24rem;
-    color: #fff;
-    border: 0
-  }
-
-  .dial {
-    display: inline-block;
-    width: 1.6rem;
-    line-height: 0.5rem;
-    text-align: center;
-    border-radius: 0.1rem;
-    font-size: 0.24rem;
-    color: #fff;
-  }
-
-  .active {
-    background: #ee3f43;
-  }
-
-  .cancel {
-    background: #868686;
-  }
-
-  .code_btn_txt {
-    float: right;
-    display: inline-block;
-    margin: 0 !important;
-    font-size: 0.28rem !important;
-    color: #ee3f44 !important;
-    background: #fff !important;
-    margin-top: 0.2rem !important;
-    width: 2rem !important;
-    text-align: right;
-    line-height: 0.3rem;
-    height: 0.4rem !important;
-    margin-right: 0.1rem !important;
-    cursor: pointer;
-  }
-
   .code_btn_d {
     float: right;
     display: inline-block;
@@ -927,184 +948,6 @@
     width: 2rem;
     text-align: right;
   }
-
-  .btn_div_d {
-    margin-top: 0.4rem;
-    background: #fff;
-    color: #ee3f44;
-    border: none;
-    width: 100%;
-    line-height: 0.82rem;
-    font-size: 0.36rem;
-    border-radius: 0 0 5px 5px;
-  }
-
-  .btn_div_d .dis_btn {
-    text-align: center;
-    line-height: 0.82rem;
-    width: 100%;
-    height: 0.82rem;
-    margin: 0 auto;
-    border: 0;
-    background: #f58c8f;
-    display: block;
-    font-size: 0.32rem;
-    color: #f9c5c6;
-  }
-
-  .btn_div_d .click_btn {
-    text-align: center;
-    line-height: 0.82rem;
-    width: 100%;
-    height: 0.82rem;
-    margin: 0 auto;
-    border: 0;
-    background: #ee3f44;
-    display: block;
-    font-size: 0.32rem;
-    color: #fff;
-  }
-
-  .deal_div {
-    margin-top: 0.3rem;
-    font-size: 0.24rem;
-    color: #999;
-  }
-
-  .footer_fixed .btn_block {
-    font-size: 0.28rem;
-    background: #fff;
-    color: #ee3f44;
-    float: right;
-    cursor: pointer;
-  }
-
-  .model_btn_div {
-    width: 100%;
-    display: block;
-    border-top: 1px solid #ececec;
-    height: 1rem;
-    line-height: 1rem;
-    margin-top: 0.3rem;
-    border-radius: 0 0 5px 5px;
-  }
-
-  .model_btn_div .cancel, .model_btn_div .active {
-    float: left;
-    display: inline-block;
-    width: 49.9%;
-    background: #fff;
-    line-height: 1rem;
-    font-size: 0.32rem;
-    text-align: center;
-  }
-
-  .model_btn_div .cancel {
-    color: #333;
-    border-right: 1px solid #ececec;
-    border-radius: 0 0 0 0.2rem;
-  }
-
-  .model_btn_div .active {
-    color: #ee3f44;
-    border-radius: 0 0 0.2rem 0;
-  }
-
-  .result {
-    position: absolute;
-    width: 6rem;
-    min-height: 3rem;
-    left: 10%;
-    top: 30%;
-    background: #fff;
-    border-radius: 0.2rem;
-    display: none;
-    z-index: 100000;
-  }
-
-  .btn_bottom {
-    border: 0;
-    background: #fff;
-    font-size: 0.3rem;
-    color: #ee3f44;
-    line-height: 1rem;
-    text-align: center;
-    width: 100%;
-    border-radius: 0 0 0.2rem 0.2rem;
-  }
-
-  .model_title {
-    font-size: 0.42rem;
-    margin-top: 0.7rem;
-    color: #333;
-  }
-
-  .model_con {
-    line-height: 0.42rem;
-    font-size: 0.3rem;
-    color: #999;
-    text-align: center;
-    padding: 0 0.26rem;
-  }
-
-  .btn_div {
-    background: #fff;
-    color: #ee3f44;
-    border: none;
-    width: 100%;
-    line-height: 1rem;
-    font-size: 0.36rem;
-    border-top: 1px solid #ddd;
-    border-radius: 0 0 5px 5px;
-  }
-
-  .btn_div .btn_bottom {
-    border: 0;
-    background: #fff;
-    font-size: 0.42rem;
-    color: #ee3f44;
-  }
-
-  .color_ee3f44 {
-    color: #ee3f44;
-  }
-
-  .alt_nonentity, .alt_tate, .alt_succeed {
-    position: absolute;
-    width: 70%;
-    min-height: 3rem;
-    left: 15%;
-    top: 30%;
-    background: #fff;
-    border-radius: 0.2rem;
-    display: none;
-    z-index: 100000;
-  }
-
-  .alt_title {
-    margin-top: 0.6rem;
-    font-size: 0.36rem;
-  }
-
-  .disableCss {
-    color: #333;
-    text-decoration: none;
-    background: #fff;
-    font-size: 0.24rem;
-    cursor: pointer;
-  }
-
-  /*.code_btn_d {*/
-  /*float: right;*/
-  /*display: inline-block;*/
-  /*margin: 0;*/
-  /*font-size: 0.28rem;*/
-  /*color: #999;*/
-  /*background: #fff;*/
-  /*margin-top: 0.2rem;*/
-  /*width: 2rem;*/
-  /*text-align: right;*/
-  /*}*/
 
 
 </style>

@@ -21,7 +21,11 @@
 </template>
 
 <script>
-    export default {
+  import http from '@/http/http.js'
+  import api from '@/assets/js/api.js';
+
+
+  export default {
         name: "list",
         data(){
           return {
@@ -56,10 +60,92 @@
                 listDescribe:'全球精选，正品特卖',
                 listDiscount:'9.5'
               }
-            ]
+            ],
+            config:{accessToken:"4_-OQgysrgioQuS5immkhXArOkPTOGvjEnqsUQ7783u1kcQJxgMGpW2b74PbeCYkBkfUCUsGuX6Xv1Jwq4s96DrA8D8bbf4EV2uXBXnMhXXllAH-eaEKy1jrP1qRak1-zxL192U-Iz_6mKC8H6REFiAJAJWX",
+              appid:"wx2d328083c1b00c6a",
+              code:"1000",
+              jsapi_ticket:"kgt8ON7yVITDhtdwci0qeeaC1rjN2ke87qwrugRiXiivRBnpiuQ3AMr13ZaQPwYpLB1NIzq7uWS34U4ccKqYLQ",
+              nonceStr:"aa5d537709d3484c86da520a304dea2f",
+              signature:"24A4975E4F694D231BD8A7524F69134A8E7A95BA",
+              timestamp:"1513242500",
+              url:"http://test1.doooly.com/wechat/home/index.jhtml?token=undefined"}
 
           }
+        },
+    methods:{
+      //成功回调函数
+//xxt 微信接口 打开微信接口
+ shareWithFriendsWX(config){
+    wx.config({
+      debug: false, // 是否开启调试模式
+      appId: config.appid, // 必填，公众号的唯一标识
+      timestamp: config.timestamp, // 必填，生成签名的时间戳
+      nonceStr: config.nonceStr, // 必填，生成签名的随机串
+      signature: config.signature,// 必填，签名，见附录1
+      jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline'] // 必填，需要使用的JS接口列表
+    });
+    wx.ready(function(){
+
+      //xxt 获取地理位置
+      wx.getLocation({
+        type: 'gcj02',
+        success: function (data) {
+          address_func(data);
         }
+      })
+
+
+    });
+   console.log(2222222123321);
+  },
+
+
+
+    },
+    created(){
+
+
+//调用微信接口获取用户数据
+      this.$jsonp("http://test1.doooly.com/shop/activity/jsonp/wechatConfig.jhtml",
+        {//请求参数
+          // params: {
+          //   url:"http://test1.doooly.com/reachtest/doooly/wechat/home/index.jhtml"
+          // },
+          jsonp:'callback',
+         // jsonpCallback:"success_jsonpCallback",
+          callback:"success_jsonpCallback",
+        }).then((res)=>{
+        console.log(res);
+        console.log(123321);
+        if(res.code == 1000){
+          //var config = JSON.parse(result);
+          this.shareWithFriendsWX(res);
+
+        }
+ });
+
+    },
+      mounted(){
+
+          console.log('xxtxxt121');
+        http({
+          method: 'get',
+          url: '/reachtest/doooly/hotBusiness/hotDatas.jhtml?address="上海"&value=-1',
+          data: {
+           // url: location.href.split('#')[0]
+           // url:"http://test1.doooly.com/doooly/wechat/home/index.jhtml"
+            company:"",
+            pageNumber:1,
+            pageSize:10
+          }
+        }).then((res)=>{
+          console.log(res.data);
+          console.log('098');
+        }).catch((error)=>{
+          console.log(error);
+        })
+
+      }
     }
 </script>
 

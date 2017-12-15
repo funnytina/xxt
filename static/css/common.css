@@ -1,6 +1,10 @@
 body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
 body,html,input{font-family:"Helvetica","robo","Arial","苹方","冬青黑","微软雅黑";}
 input{border: 0;}
+a {
+  width: 100%;
+  text-decoration: none;
+}
 h1,h2,h3,h4,h5,h6{font-weight: normal;}
 .fl{float: left}
 .fr{float: right}
