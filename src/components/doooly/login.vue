@@ -1,10 +1,9 @@
 <template>
   <div>
     <header><img :src="headerImgSrc"/></header>
-
-
     <section class="logo_main">
       <form @focusin="focusinMethod" @focusout="focusoutMethod">
+        <!--手机登录-->
         <div id="log1" v-if="mobileState">
           <article class="clearfix tel">
             <div class="index_div">
@@ -17,9 +16,7 @@
               <input type="tel" v-model="validCodeNum" placeholder="请输入验证码" class="form-control" maxlength="6" id="code"
                      name="code">
               <div class="code_btn_txt" id="hq" @click="getValidCode" v-if="codeState">获取验证码</div>
-              <!-- <div class="code_btn_txt" id="hq" v-if="codeState">获取验证码</div> -->
               <div class="code_btn_d" v-if="!codeState">{{timeNum}}s后重新获取</div>
-
             </div>
           </article>
           <div class="btn_div_d">
@@ -28,6 +25,7 @@
             </button>
           </div>
         </div>
+        <!--账号密码登录-->
         <div id="log2" v-if="accountState">
           <article class="clearfix man">
             <div class="index_div">
@@ -47,8 +45,6 @@
             </div>
           </div>
         </div>
-
-
       </form>
       <div class="deal_div">
         <div class="fl"><a href="/reachtest/wechat/activation/getUserProtocol.jhtml">用户登录即代表同意<span>《用户协议》</span></a>
@@ -58,20 +54,16 @@
         </div>
       </div>
     </section>
-
     <footer class="footer_fixed">
       <div class="footer-wrapper" @click="changeLogin">
         <div class="btn_block" id="cardLoginDiv" v-if="mobileState">账号密码登录</div>
         <div class="btn_block" id="telLoginDiv" v-else>手机验证登录</div>
       </div>
     </footer>
-
   </div>
 </template>
 
 <script>
-
-  // import {checkmobile} from '@/assets/js/checkIdentityAndMobile';
   import http from '@/http/http.js'
   import {MessageBox} from 'mint-ui';
   import Cookies from 'js-cookie';
@@ -97,7 +89,7 @@
       }
     },
     computed: {
-//log1 登录状态控制
+      // log1 登录状态控制
       log1Disable: function () {
         if ((this.mobileNum == "" || this.validCodeNum == "") || this.isLoading) {
           return true
@@ -106,10 +98,7 @@
           return false
         }
       },
-
-
-
-//log2 登录状态控制
+      //log2 登录状态控制
       log2Disable: function () {
         if ((this.accountNum == "" || this.passwordNum == "") || this.isLoading2) {
           return true
@@ -118,7 +107,6 @@
           return false
         }
       },
-
       //log1 登录样式控制
       classObject1: function () {
         if ((this.mobileNum != "" && this.validCodeNum != "") && !this.isLoading) {
@@ -132,12 +120,8 @@
             dis_btn: true,
             click_btn: false
           }
-
         }
-
       },
-
-
       //log2 登录样式控制
       classObject2: function () {
         if (this.accountNum != "" && this.passwordNum != "" && !this.isLoading2) {
@@ -151,23 +135,14 @@
             dis_btn: true,
             click_btn: false
           }
-
         }
       }
     },
-
-
     methods: {
-
       //拨打电话
-      mobileCall(){
-        window.location.href = 'tel://400-151-1111';
-        console.log(121);
-      //  console.log(api);
-        console.log(isWeiXin());
+      mobileCall() {
+        window.location.href = 'tel://400-158-2212';
       },
-
-
       //账号不存在
       altNonentity() {
         MessageBox({
@@ -180,24 +155,18 @@
           this.mobileCall();
         });
       },
-
-
-
       //退出当前账户
       altQuit() {
         MessageBox('请退出当前账户');
       },
-
       //等待激活
       altAwaitActive(date) {
         MessageBox('等待激活', '您已经在' + date + '提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)');
       },
-
       //审核未通过
       altUnapprove() {
         MessageBox('提示', '很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！');
       },
-
       //密码错误
       altPwdError() {
         MessageBox({
@@ -208,7 +177,6 @@
           showCancelButton: true
         });
       },
-
       //账号异常
       altAccountError() {
         MessageBox({
@@ -233,6 +201,7 @@
           this.mobileCall();
         })
       },
+      // 改变登录方式
       changeLogin() {
         this.mobileState = !this.mobileState;
         this.accountState = !this.accountState;
@@ -271,158 +240,82 @@
           return true;
         }
       },
-
-
+      // 60s倒计时
       timingCode() {
-
-          this.codeState = !this.codeState;
-          let interval = setInterval(() => {
-            if (this.timeNum > 0 && this.timeNum <= 60) {
-              this.timeNum--;
-            }
-            else if (this.timeNum == 0) {
-              clearInterval(interval);
-              this.timeNum = 60;
-            }
-          }, 1000)
-         this.codeState = !this.codeState;
-
-
-        // let interval = setInterval(() => {
-        //   if (this.timeNum > 0 && this.timeNum <= 60) {
-        //     this.timeNum--;
-        //   }
-        //   else if (this.timeNum == 0) {
-        //     clearInterval(interval);
-        //     this.codeState = !this.codeState;
-        //     this.timeNum = 60;
-        //   }
-        // }, 1000)
-        // let interval = setInterval((timeNum) => {
-        //   console.log(this);
-        //   console.log(timeNum);
-        //   // console.log(timeNum)
-        //   if (timeNum > 0 && timeNum <= 60) {
-        //     timeNum--;
-        //     console.log(timeNum);
-        //   }
-        //   else if (timeNum == 0) {
-        //     clearInterval(interval);
-        //     this.codeState = !this.codeState;
-        //     timeNum = 60;
-        //   }
-        // }, 1000)
-
-      },
-
-      getValidCode() {
-
-
-        //console.log(this.checkMobile())
-        //this.codeState = !this.codeState;
-        //this.timingCode();
-      //  this.pwdInterface == api.checkMobile
-
-
-          if (this.checkMobile() == false) {
-            return false;
+        let interval = setInterval(() => {
+          if (this.timeNum > 0 && this.timeNum < 61) {
+            this.codeState = false;
+            this.timeNum--;
           }
-
-          http({
-            method: 'post',
-            url: api.checkMobile,
-            data: {
-              mobile: this.mobileNum
+          else if (this.timeNum == 0) {
+            this.codeState = true;
+            clearInterval(interval);
+            this.timeNum = 60;
+          }
+        }, 1000)
+      },
+      // 获取验证码
+      getValidCode() {
+        if (this.checkMobile() == false) {
+          return false;
+        }
+        http({
+          method: 'post',
+          url: api.checkMobile,
+          data: {
+            mobile: this.mobileNum
+          }
+        }).then(
+          (res) => {
+            if (res.data.code == "1000") {
+              http({
+                method: 'post',
+                url: api.getLoginVCode,
+                data: {
+                  mobile: this.mobileNum
+                }
+              }).then(
+                (res) => {
+                  this.$toast(res.data.msg.content);
+                  if (res.data.code == 1001 || res.data.code == 1006) {
+                    this.timingCode();
+                  }
+                }
+              ).catch((error) => {
+                this.$toast("服务器异常");
+              })
             }
-          }).then(
-            (res) => {
-              //  console.log(11111111111111)
-              //   console.log(res)
-
-              if (res.data.code == "1000") {
-
-
-                //  this.codeState = !this.codeState;
-
-                http({
-                  method: 'post',
-                  url: api.getLoginVCode,
-                  data: {
-                    mobile: this.mobileNum
-                  }
-                }).then(
-                  (res) => {
-                    this.$toast(res.data.msg.content);
-                    if (res.data.code == 1001 || res.data.code == 1006) {
-                      this.timingCode();
-
-
-                    }
-
-                    // console.log(res.data);
-                    // console.log(3333333333)
-                  }
-                ).catch((error) => {
-                  // console.log(44444444444)
-                  // console.log(res.data)
-                  this.$toast("服务器异常");
-                })
-
-
+            else {
+              if (res.data.code == "1010") {
+                this.altAwaitActive(res.data.date);
+              }
+              else if (res.data.code == "1011") {
+                this.altUnapprove();
+              }
+              else if (res.data.code == "1004") {
+                this.altNonentity();
+              }
+              else if (res.data.code == "1003") {
+                this.altQuit()
+              }
+              else if (res.data.code == "1008") {
+                MessageBox({
+                  title: '提示',
+                  message: '验证码错误',
+                  showCancelButton: true
+                });
               }
               else {
-                if (res.data.code == "1010") {
-                  // MessageBox({
-                  //   title: '等待激活',
-                  //   message: '您已经在'+data.date+'提交过申请，我们会在5个工作日内完成审核。如有疑问，您可以拨打客服电话400-158-2212(周一至周五, 9:00AM-18:00PM)',
-                  //   showCancelButton: true
-                  // });
-                  this.altAwaitActive(res.data.date);
-                }
-                else if (res.data.code == "1011") {
-                  // MessageBox({
-                  //   title: '提示',
-                  //   message: '很抱歉您自主申请的兜礼会员审核未通过，请与所在单位联系！',
-                  //   showCancelButton: true
-                  // });
-                  this.altUnapprove();
-                }
-                else if (res.data.code == "1004") {
-                  this.altNonentity();
-                }
-                else if (res.data.code == "1003") {
-                  // MessageBox({
-                  //   title: '提示',
-                  //   message: '请退出当前账户',
-                  //   showCancelButton: true
-                  // });
-                  this.altQuit()
-                }
-                else if (res.data.code == "1008") {
-                  MessageBox({
-                    title: '提示',
-                    message: '验证码错误',
-                    showCancelButton: true
-                  });
-                }
-                else {
-                  this.altAllError();
-                }
-
+                this.altAllError();
               }
-
             }
-          ).catch((error) => {
-              this.$toast("服务器异常");
-              console.log(error)
-            }
-          )
-
-
-
-
+          }
+        ).catch((error) => {
+            this.$toast("服务器异常");
+            console.log(error)
+          }
+        )
       },
-
       //手机号登录
       mobileLogin() {
         if (this.checkMobile() == false) {
@@ -443,10 +336,7 @@
           }
         }).then(
           (res) => {
-
-
             if (res.data.code == 1001) {
-
               http({
                 method: 'post',
                 url: api.telLogin,
@@ -455,13 +345,12 @@
                 }
               }).then(
                 (res) => {
-                  // let parser = new UAParser();
                   let browserName = getBrowser();
-                  // console.log(browserName)
                   let token = res.data.token;
                   if (res.data.code == "1000") {
                     if (browserName == "WeChat") {
-                      this.$router.push('home');
+                      //this.$router.push('home');
+                      this.$router.push({path: '/home/' + token})
                     }
                     else if (browserName == "WebKit") {
                       var str = res.data.userInfo;
@@ -481,10 +370,8 @@
                       // //location.href = "${base}/wechat/receiveGift/comredbag.jhtml";
                       // location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                       // [/#if]
-
                       this.$router.push({path: '/home/' + token})
                     }
-
                   }
                   else {
                     if (res.data.code == "1004") {
@@ -504,16 +391,12 @@
                           // //location.href ="${base}/doooly/home/index.jhtml?address=";
                           // [/#if]
                           alert('请更新个人信息！1')
-
-                          if(Cookies.get('redirectUrl')){
+                          if (Cookies.get('redirectUrl')) {
                             this.$router.push({path: 'redirectUrl'})
                           }
-                          else{
+                          else {
                             this.$router.push('improvePersonalData');
-
                           }
-
-
                         } else {
                           //location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
                           this.$router.push('improvePersonalData');
@@ -532,7 +415,6 @@
                         RHNativeJS.nativeUserInfomation(res.data.userInfo, "1", token);
                       }
                       else {
-
                         //localStorage.token = token;
                         // [#if redirectUrl??]
                         // location.href = "${redirectUrl}?token="+token;
@@ -552,35 +434,27 @@
                     }
                     else {
                       this.altAccountError();
-
                     }
                     this.loginText = "登录";
                     this.isLoading = false;
-
                   }
                 }).catch((error) => {
                   console.log(error)
                 }
               )
-
             }
             else {
               this.loginText = "登录";
               this.isLoading = false;
               this.$toast(res.data.msg.content);
             }
-
-
           }).catch((error) => {
           //console.log(error);
           this.loginText = "登录";
           this.isLoading = false;
           this.$toast("服务异常，请稍后再试");
         })
-
-
       },
-
       //卡号登录
       accountLogin() {
         if (this.checkAccout() == false) {
@@ -593,9 +467,6 @@
         this.loginText2 = "登录中";
         this.isLoading2 = true;
         let rsaKey = new RSAKey();
-        // console.log(rsaKey);
-
-
         http({
           method: 'get',
           url: api.public_key,
@@ -606,8 +477,6 @@
         }).then((res) => {
           rsaKey.setPublic(b64tohex(res.data.modulus), b64tohex(res.data.exponent));
           let enPassword = hex2b64(rsaKey.encrypt(this.passwordNum));
-          console.log(enPassword);
-
           http({
             method: 'post',
             url: api.submit1,
@@ -616,12 +485,8 @@
               enPassword: enPassword
             }
           }).then((res) => {
-            console.log(res.data);
-            console.log(10101010);
-            // let parser = new UAParser();
             let browserName = getBrowser();
             let token = res.data.token;
-
             if (res.data.code == "1000") {
               if (browserName == "WeChat") {
                 // [#if redirectUrl??]
@@ -629,17 +494,12 @@
                 // [#else]
                 // location.href ="${base}/wechat/home/index.jhtml?address=";
                 // [/#if]
-
-                if(Cookies.get('redirectUrl')){
+                if (Cookies.get('redirectUrl')) {
                   this.$router.push({path: 'redirectUrl'})
                 }
-                else{
+                else {
                   this.$router.push('home');
                 }
-
-
-
-
               }
               else if (browserName == "WebKit") {
                 //判断iPhone|iPad|iPod|iOS
@@ -681,17 +541,13 @@
                     // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
                     //
                     // [/#if]
-
-                    if(Cookies.get('redirectUrl')){
+                    if (Cookies.get('redirectUrl')) {
                       this.$router.push({path: 'redirectUrl'});
                     }
-                    else{
+                    else {
                       this.$router.push('improvePersonalData');
-
                     }
-
-
-                   // alert("更新个人资料11")
+                    // alert("更新个人资料11")
                   } else {
                     // location.href ="${base}/wechat/myaccount/improvePersonalData.jhtml";
                     //alert("更新个人资料22");
@@ -699,7 +555,6 @@
                   }
                 }
                 else if (browserName == "WebKit") {
-                  //alert("ios");
                   var str = res.data.userInfo;
                   var userInfo = JSON.parse(str);
                   var params = {"userInfo": userInfo.adUserConn, "type": "1", "token": token}
@@ -727,64 +582,26 @@
               }
               else if (res.data.code == "1008") {
                 this.altPwdError();
-
               }
               else {
                 this.altAccountError();
-                // this.loginText2 = "登录";
-                // this.isLoading2 = false;
               }
               this.loginText2 = "登录";
               this.isLoading2 = false;
-
             }
-
-
           }).catch((error) => {
             console.log(error)
           })
-
         }).catch((error) => {
           console.log(error)
           this.loginText2 = "登录";
           this.isLoading2 = false;
         })
-
-
       },
-
-      //忘记密码之安卓交互
-      // forgetPwdAndroid() {
-      //   // let jsonObj = {
-      //   //   "title": {"text": "忘记密码"},
-      //   //   "leftButton": {"name": "return", "text": "返回", "func": "goLastPage()", "visable": "true"},
-      //   //   "visable": "true"
-      //   // };
-      //   // let browserName = getBrowser();
-      //   // if (browserName == "WebKit") {
-      //   //   window.webkit.messageHandlers.initPageTitle.postMessage(JSON.stringify(jsonObj));
-      //   //   //  window.webkit.messageHandlers.getPhoneDeviceId.postMessage("phoneid");
-      //   // }
-      //   // else if (browserName == "Chrome WebView") {
-      //   //   RHNativeJS.initPageTitle(JSON.stringify(jsonObj));
-      //   //   RHNativeJS.hideWaitPanel();
-      //   //   //   RHNativeJS.getPhoneDeviceId("phoneid");
-      //   //   $('body').height($(window).height() + 150 + 'px');
-      //   //   $('body').css('height', '110%');
-      //   // }
-      //
-      // },
-
       //点击忘记密码执行的函数
       forgetPwd() {
         this.$router.push('resetPassword');
-
       },
-
-
-
-
-
     }
   }
 </script>
@@ -948,6 +765,4 @@
     width: 2rem;
     text-align: right;
   }
-
-
 </style>

@@ -17,7 +17,6 @@
                      name="code">
               <div class="code_btn_txt" id="hq" @click="getValidCode3" v-if="codeState3">获取验证码</div>
               <div class="code_btn_d" v-if="!codeState3">{{timeNum3}}s后重新获取</div>
-
             </div>
           </article>
           <div class="btn_div_d">
@@ -26,8 +25,6 @@
             </button>
           </div>
         </div>
-
-
       </form>
       <div class="deal_div">
         <div class="fl"><a href="/reachtest/wechat/activation/getUserProtocol.jhtml">用户登录即代表同意<span>《用户协议》</span></a>
@@ -48,18 +45,15 @@
   export default {
     name: "reset-password",
     data() {
-
-      return{
+      return {
         headerImgSrc: 'http://test1.doooly.com/resources/wechat/images/staff_a/logo_header.jpg',
         mobileNum3: "",
         validCodeNum3: "",
         codeState3: true,
         loginText3: "登录",
-        timeNum3: 11,
+        timeNum3: 60,
         isLoading3: false,
-
       }
-
     },
     computed: {
       log1Disable3: function () {
@@ -83,14 +77,10 @@
             dis_btn: true,
             click_btn: false
           }
-
         }
-
       }
     },
-
-    methods:{
-
+    methods: {
       focusinMethod() {
         this.headerImgSrc = 'http://test1.doooly.com/resources/wechat/images/staff_a/logo_header_small.jpg'
       },
@@ -108,7 +98,8 @@
           this.mobileCall();
         });
       },
-      getValidCode3(){
+      // 忘记密码-获取验证码
+      getValidCode3() {
         if (this.checkForgetPwd() == false) {
           return false;
         }
@@ -119,15 +110,9 @@
             mobile: this.mobileNum3
           }
         }).then((res) => {
-          //this.codeState3 = !this.codeState3;
           this.$toast(res.data.msg.content);
           if (res.data.code == 1001) {
-            // if(this.timeNum!=60){
-            //   this.codeState3 = false;
-            // }
             this.timercode();
-
-
           }
           else {
             if (res.data.code == 1002) {
@@ -137,38 +122,26 @@
               this.$toast(res.data.msg.content);
             }
           }
-
-
         }).catch((error) => {
           this.$toast("网络繁忙");
-
         })
       },
-      timercode(){
-       // this.codeState3 = !this.codeState3;
+      // 60s倒计时
+      timercode() {
         let interval = setInterval(() => {
-          if (this.timeNum3 >= 0 && this.timeNum3 < 12) {
-            --this.timeNum3;
-          }
-          else if (this.timeNum3 == -1) {
-            clearInterval(interval);
-            this.timeNum3 = 11;
-          }
-          // else if(this.timeNum!=11 ) {
-          //   this.codeState3 = false;
-          // }
-           if(this.timeNum!=11 ) {
+          if (this.timeNum3 > 0 && this.timeNum3 < 61) {
             this.codeState3 = false;
+            this.timeNum3--;
           }
-          if(this.timeNum=11){
+          if (this.timeNum3 == 0) {
             this.codeState3 = true;
+            clearInterval(interval);
+            this.timeNum3 = 60;
           }
-          }, 1000)
-     //  this.codeState3 = true;
+        }, 1000)
       },
       //忘记密码的登录方法
       forgetPwdLogin() {
-        this.forgetPwdAndroid();
         if (this.checkForgetPwd() == false) {
           return false;
         }
@@ -233,17 +206,13 @@
             this.loginText3 = "登录";
             this.isLoading3 = false;
             this.$toast('系统繁忙');
-
           }
         }).catch((error) => {
           this.loginText3 = "登录";
           this.isLoading3 = false;
           this.$toast('系统繁忙');
         })
-
-
       },
-
       checkForgetPwd() {
         let re = /^1[3|4|5|7|8][0-9]{9}$/;
         if (this.mobileNum3 == "") {
@@ -258,11 +227,8 @@
           return true;
         }
       },
-
-
-
     },
-    create(){
+    create() {
       let jsonObj = {
         "title": {"text": "忘记密码"},
         "leftButton": {"name": "return", "text": "返回", "func": "goLastPage()", "visable": "true"},

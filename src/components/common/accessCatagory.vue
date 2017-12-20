@@ -1,48 +1,11 @@
 <template>
   <div class="access">
     <ul>
-      <!--<li-->
-      <!--onclick="link('/doooly/hotActivity/toHotActivityIndex.jhtml');_czc.push(['_trackEvent', '首页菜单按钮', '1', '热门活动','','']);">-->
-      <!--<img src="${base}/resources/doooly/images/home/hot.png"><br>-->
-      <!--<span>热门活动</span>-->
-      <!--</li>-->
-      <!--<li onclick="link('/doooly/member/scan/list.jhtml');_czc.push(['_trackEvent', '首页菜单按钮', '2', '扫码优惠','','']);">-->
-      <!--<img src="${base}/resources/doooly/images/home/scan.png"><br>-->
-      <!--<span>扫码优惠</span>-->
-      <!--</li>-->
-      <!--<li-->
-      <!--onclick="link('/doooly/homeCoupon/businessList.jhtml');_czc.push(['_trackEvent', '首页菜单按钮', '3', '优惠券','','']);">-->
-      <!--<img src="${base}/resources/doooly/images/home/ticket.png"><br>-->
-      <!--<span>优惠券</span>-->
-      <!--</li>-->
-      <!--&lt;!&ndash;<li onclick="link('/doooly/member/order/toRecharge.jhtml')">&ndash;&gt;-->
-      <!--<li-->
-      <!--onclick="link('/doooly/member/order/toRecharge.jhtml');_czc.push(['_trackEvent', '首页菜单按钮', '4', '手机充值','','']);">-->
-      <!--<img src="${base}/resources/doooly/images/home/tel_charge.png"><br>-->
-      <!--<span>手机充值</span>-->
-      <!--</li>-->
-      <!--<li onclick="link('/doooly/selfProduct/list.jhtml');_czc.push(['_trackEvent', '首页菜单按钮', '5', '卡券购买','','']);">-->
-      <!--<img src="${base}/resources/doooly/images/home/buy.png"><br>-->
-      <!--<span>卡券购买</span>-->
-      <!--</li>-->
-      <!--<li-->
-      <!--<#if member.memberType==0>onclick="link('/doooly/familyInviteApp/familyInviteApp.jhtml');_czc.push(['_trackEvent',-->
-      <!--'首页菜单按钮', '6', '邀请亲友','','']);" <#elseif member.memberType==1> onclick="alr_toast('你已经是家属了')" <#else>-->
-      <!--onclick="alr_toast('服务器异常')"-->
-      <!--</-->
-      <!--#if> >-->
-      <!--&lt;!&ndash;<li onclick="alr_toast('敬请期待')">&ndash;&gt;-->
-      <!--<img src="${base}/resources/doooly/images/home/family.png"><br>-->
-      <!--<span>邀请亲友</span>-->
-      <!--</li>-->
-
-
-      <li v-for="(item,index) in accessCatagoryData" :key="index">
+      <li v-for="(item,index) in accessCatagoryData" :key="index"
+          @click="linkAccess(item.title);umengClickAccess(index+1)">
         <img :src="item.accessCatagoryImgSrc"><br>
         <span>{{item.accessCatagoryContent}}</span>
       </li>
-
-
     </ul>
   </div>
 </template>
@@ -50,50 +13,59 @@
 <script>
   export default {
     name: "access-catagory",
-    data(){
+    data() {
       return {
         accessCatagoryData: [
           {
-            title: 'HotActivity',
+            title: 'hotActivity',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/hot.png',
             accessCatagoryContent: '热门活动'
           },
           {
-            title: 'HotActivity',
+            title: 'scanDiscounts',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/scan.png',
             accessCatagoryContent: '扫码优惠'
           },
           {
-            title: 'HotActivity',
+            title: 'discountTicket',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/ticket.png',
             accessCatagoryContent: '优惠券'
           },
           {
-            title: 'HotActivity',
+            title: 'telCharge',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/tel_charge.png',
             accessCatagoryContent: '手机充值'
           },
           {
-            title: 'HotActivity',
+            title: 'cardBuy',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/buy.png',
             accessCatagoryContent: '卡券购买'
           },
           {
-            title: 'HotActivity',
+            title: 'familyInvite',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
             accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/family.png',
             accessCatagoryContent: '邀请亲友'
           }
-
         ]
       }
-    }
-
+    },
+    methods: {
+      linkAccess(name) {
+        this.$router.push({name: name});
+        console.log(name);
+      },
+      umengClickAccess(label) {
+        umengClick('', '首页bt', label, '', '');
+        console.log(999);
+        // console.log(label);
+      }
+    },
   }
 </script>
 

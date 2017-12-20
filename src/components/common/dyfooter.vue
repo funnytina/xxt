@@ -1,7 +1,6 @@
 <template>
   <div class="include_footer">
     <ul>
-      <!--<li v-for="(item,index) in footerTobarData" :key="index" @click="toLink(item.tobarLink)">-->
       <li v-for="(item,index) in footerTobarData" :key="index" @click="toLink(item.tobarLink)">
         <span :class="item.tobarIcon"></span><br>{{item.tobarContent}}
       </li>
@@ -13,7 +12,6 @@
   export default {
     name: "dyfooter",
     data() {
-
       return {
         footerTobarData: [
           {
@@ -53,8 +51,8 @@
 
   @font-face {
     font-family: 'icomoon';
-    src:  url('/static/fonts/icomoon.eot?l4zkg0');
-    src:  url('/static/fonts/icomoon.eot?l4zkg0#iefix') format('embedded-opentype'),
+    src: url('/static/fonts/icomoon.eot?l4zkg0');
+    src: url('/static/fonts/icomoon.eot?l4zkg0#iefix') format('embedded-opentype'),
     url('/static/fonts/icomoon.ttf?l4zkg0') format('truetype'),
     url('/static/fonts/icomoon.woff?l4zkg0') format('woff'),
     url('/static/fonts/icomoon.svg?l4zkg0#icomoon') format('svg');
@@ -80,24 +78,26 @@
   .icon-center:before {
     content: "\e900";
   }
+
   .icon-company:before {
     content: "\e901";
   }
+
   .icon-index:before {
     content: "\e902";
   }
+
   .icon-scan:before {
     content: "\e903";
   }
 
-
-
-  .include_footer_bg{
+  .include_footer_bg {
 
     height: 1rem;
     width: 100%;
   }
-  .include_footer{
+
+  .include_footer {
 
     position: fixed;
     left: 0;
@@ -108,11 +108,13 @@
     background: #fff;
     border-top: 1px solid #dadadb;
   }
-  .include_footer ul{
+
+  .include_footer ul {
     font-size: 0;
     text-align: center;
   }
-  .include_footer ul li{
+
+  .include_footer ul li {
     display: inline-block;
     font-size: 0.24rem;
     line-height: 0.3rem;
@@ -121,15 +123,17 @@
     text-align: center;
     padding-top: 0.18rem;
   }
+
   /*.include_footer ul li.check{*/
-    /*color: #ee3f44;*/
+  /*color: #ee3f44;*/
   /*}*/
 
-  .include_footer ul li:active{
+  .include_footer ul li:active {
     color: #ee3f44;
   }
-  .include_footer ul li span{
-    font-size:0.42rem;
+
+  .include_footer ul li span {
+    font-size: 0.42rem;
     display: inline-block;
     margin-bottom: 0.05rem;
   }
