@@ -11,14 +11,14 @@ function getBrowser(){
 }
 
 //判断是否为微信浏览器
-function isWeiXin(){ 
-    var ua = window.navigator.userAgent.toLowerCase(); 
-    if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
-    	return true; 
+function isWeiXin(){
+    var ua = window.navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+    	return true;
     }
-    else{ 
-    	return false; 
-    } 
+    else{
+    	return false;
+    }
 }
 //判断是否为pc浏览器
 function IsPC() {
@@ -36,47 +36,6 @@ function IsPC() {
     return flag;
 }
 
-//获取id
-var userId = "";
-function usedId(data){
-     userId = data;
-}
-
-//获取token
-var token = "";
-function getToken(data){
-	token=data;
-}
-
-if(isWeiXin()){
-	
-}else{
-    if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
-    	window.webkit.messageHandlers.getUserId.postMessage("usedId");
-    	window.webkit.messageHandlers.nativePreservateToken.postMessage("getToken");
-    } else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
-    	RHNativeJS.getUserId("usedId");
-    	RHNativeJS.nativePreservateToken("getToken");
-    }else{}
-}
-
-if(browserName=="WeChat"){
-	
-}
-else if(browserName=="WebKit")
-{
-	window.webkit.messageHandlers.getUserId.postMessage("usedId");
-	window.webkit.messageHandlers.nativePreservateToken.postMessage("getToken");
-}
-else if(browserName=="Chrome WebView")
-{
-	RHNativeJS.getUserId("usedId");
-	RHNativeJS.nativePreservateToken("getToken");
-}else{
-	if(localStorage.token != '' && localStorage.token != undefined){
-		token=localStorage.token;
-	}
-}
 
 //监控代码
 //百度
@@ -84,7 +43,7 @@ var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?88f914c6dca039be2e821762269b9240";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 //友盟

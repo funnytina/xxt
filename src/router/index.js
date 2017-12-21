@@ -21,7 +21,7 @@ export default new Router({
       component: login
     },
     {
-      path: '/home/:token',
+      path: '/home',
       name: 'home',
       component: home
     },

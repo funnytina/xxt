@@ -345,14 +345,22 @@
                 }
               }).then(
                 (res) => {
-                  let browserName = getBrowser();
-                  let token = res.data.token;
+
+                  if(res.data.token){
+                    var token=res.data.token;
+                    localStorage.token = token;
+                  }
+                  else{
+                    var token;
+                  }
+                 // let browserName = getBrowser();
                   if (res.data.code == "1000") {
                     if (browserName == "WeChat") {
-                      //this.$router.push('home');
-                      this.$router.push({path: '/home/' + token})
+                      this.$router.push('home');
+                      //this.$router.push({path: '/home/' + token})
                     }
                     else if (browserName == "WebKit") {
+
                       var str = res.data.userInfo;
                       var userInfo = JSON.parse(str);
                       var params = {"userInfo": userInfo.adUserConn, "type": "0", "token": token};
@@ -363,14 +371,15 @@
                     }
                     else {
                       // var token=loginData.token;
-                      localStorage.token = token;
+                     // localStorage.token = token;
                       // [#if redirectUrl??]
                       // location.href = "${redirectUrl}?token="+token;
                       // [#else]
                       // //location.href = "${base}/wechat/receiveGift/comredbag.jhtml";
                       // location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                       // [/#if]
-                      this.$router.push({path: '/home/' + token})
+                     // this.$router.push({path: '/home/' + token})
+                      this.$router.push({path: '/home'})
                     }
                   }
                   else {
@@ -381,6 +390,7 @@
                       this.altQuit();
                     }
                     else if (res.data.code == "1006") {
+
                       if (browserName == "WeChat") {
                         var timestamp = Date.parse(new Date());
                         if (timestamp < 1510416000000) {
@@ -485,8 +495,16 @@
               enPassword: enPassword
             }
           }).then((res) => {
-            let browserName = getBrowser();
-            let token = res.data.token;
+           // let browserName = getBrowser();
+            if(res.data.token){
+              var token=res.data.token;
+              localStorage.token = token;
+            }
+            else{
+              var token;
+            }
+
+
             if (res.data.code == "1000") {
               if (browserName == "WeChat") {
                 // [#if redirectUrl??]
@@ -520,7 +538,7 @@
                 //  [#else]
                 //  location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                 //  [/#if]
-                this.$router.push({path: '/home/' + token})
+                this.$router.push({path: '/home'})
               }
             }
             else {

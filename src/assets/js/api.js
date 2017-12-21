@@ -9,6 +9,7 @@ const api = {
   resetPwd:'/reachtest/wechat/password/resetPwd.jhtml',
   wechatConfig:'/reachtest/shop/activity/jsonp/wechatConfig.jhtml',
   commonShareJSONPConfig:'http://test2.doooly.com/Doooly/share/commonShareJSONPConfig',
-  hotDatas:'/reachtest/doooly/hotBusiness/hotDatas.jhtml'
+  hotDatas:'/reachtest/doooly/hotBusiness/hotDatas.jhtml',
+  getHotActivityList:'/reachtest/wechat/hotActivity/getHotActivityList.jhtml'
 };
 export default api;

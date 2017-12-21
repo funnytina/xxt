@@ -68,18 +68,19 @@
       //商户详情跳转
       businessDetail(dealType, id) {
         //if(isWeiXin()){
+        //if(browserName == "WeChat"){
         if (true) {
           // window.location.href=$("#base").val()+'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token;
           this.$router.push({
             name: 'businessinfo',
-            params: {dealType1: dealType, id1: id, token: this.$route.params.token}
+            params: {dealType1: dealType, id1: id, token: localStorage.token}
           });
         } else {
           let jsonObj = {
             "jumpType": "InsideJump",
             //  "jumpUrl":$("#httpsBase").val()+'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
             //   "jumpUrl":'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
-            "jumpUrl": '/wechat/hotBusiness/businessInfo.jhtml?dealType=' + dealType + '&id=' + id + '&userId=' + userId + '&token=' + this.$route.params.token
+            "jumpUrl": '/wechat/hotBusiness/businessInfo.jhtml?dealType=' + dealType + '&id=' + id + '&userId=' + userId + '&token=' + localStorage.token
           };
           if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
             window.webkit.messageHandlers.gotoNativeJump.postMessage(JSON.stringify(jsonObj));
@@ -99,7 +100,7 @@
         this.searchCondition.pageNo = parseInt(this.searchCondition.pageNo) + 1;
         http({
           method: 'get',
-          url: this.joinHotdatasUrl('上海', this.$route.params.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
+          url: this.joinHotdatasUrl('上海', localStorage.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
         }).then((res) => {
           if (this.searchCondition.pageNo >= res.data.data.countPage) {
             this.allLoaded = true;
@@ -112,7 +113,7 @@
       loadPageList: function () {
         http({
           method: 'get',
-          url: this.joinHotdatasUrl('上海', this.$route.params.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
+          url: this.joinHotdatasUrl('上海', localStorage.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
         }).then((res) => {
           this.listData = [...res.data.data.hotMerchantList];
           if (this.searchCondition.pageNo >= res.data.data.countPage) {
@@ -149,6 +150,7 @@
      //把经纬度转化成省后从后台获取数据
       address_func(data) {
         //  if(isWeiXin()){
+        //if(browserName == "WeChat"){
         if (true) {
           //  lnglatXY = [data.longitude, data.latitude]; //已知点坐标
           let lnglatXY = [116.395645, 39.929986];
