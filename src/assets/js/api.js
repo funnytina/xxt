@@ -10,6 +10,9 @@ const api = {
   wechatConfig:'/reachtest/shop/activity/jsonp/wechatConfig.jhtml',
   commonShareJSONPConfig:'http://test2.doooly.com/Doooly/share/commonShareJSONPConfig',
   hotDatas:'/reachtest/doooly/hotBusiness/hotDatas.jhtml',
-  getHotActivityList:'/reachtest/wechat/hotActivity/getHotActivityList.jhtml'
+  getHotActivityList:'/reachtest/wechat/hotActivity/getHotActivityList.jhtml',
+  getTargetUrl:'/reachtest/wechat/oneNumber/getTargetUrl.jhtml',
+ // freshDimensionUrl:'/reachtest/doooly/member/scan/freshDimensionUrl',
+  freshDimensionUrl:'/reachtest/wechat/member/scan/freshDimensionUrl.jhtml',
 };
 export default api;

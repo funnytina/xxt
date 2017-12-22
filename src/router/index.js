@@ -10,7 +10,7 @@ import discountTicket from '@/components/doooly/discountTicket';
 import telCharge from '@/components/doooly/telCharge';
 import cardBuy from '@/components/doooly/cardBuy';
 import familyInvite from '@/components/doooly/familyInvite';
-
+import scanDetail from '@/components/doooly/scanDetail';
 Vue.use(Router);
 export default new Router({
   mode: 'history',
@@ -34,6 +34,11 @@ export default new Router({
       path: '/scanDiscounts',
       name: 'scanDiscounts',
       component: scanDiscounts
+    },
+    {
+      path: '/scanDetail',
+      name: 'scanDetail',
+      component: scanDetail
     },
     {
       path: '/discountTicket',

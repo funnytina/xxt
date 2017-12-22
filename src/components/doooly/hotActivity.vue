@@ -5,7 +5,7 @@
       <v-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore"
                   :bottomDistance="bottomDistanceValue" bottomDropText="" bottomPullText="">
     <ul id="activityList">
-      <li v-for="(item,index) in activityData" :key="index" @click="changedialogBoxData(item.detailUrl,item.company,item.logo,item.activityType);indexClick(item.company,index+1)">
+      <li v-for="(item,index) in activityData" :key="index" @click="changedialogBoxData(item.activityLinkUrl,item.company,item.logo,item.activityType);indexClick(item.company,index+1)">
         <img :src="item.listImageUrl" alt="item.company">
         <!--<dialogBox :dialogState="dialogState" :detailUrl="item.detailUrl" :company="item.company" :logo="item.logo" :activityType="item.activityType"></dialogBox>-->
       </li>
@@ -19,12 +19,12 @@
       </v-loadmore>
     </div>
   </div>
-  <dialogBox v-on:chaildChangeState="chaildDialogState" :dialogState="dialogState" :detailUrl="dialogBoxData.detailUrl" :company="dialogBoxData.company" :logo="dialogBoxData.logo" :activityType="dialogBoxData.activityType"></dialogBox>
+  <dialogBox v-on:chaildChangeState="chaildDialogState" :dialogState="dialogState" :detailUrl="dialogBoxData.detailUrl" :company="dialogBoxData.company" :logo="dialogBoxData.logo" :openOneNnumber=0></dialogBox>
   </div>
 </template>
 
 <script>
-  import http from '@/http/http.js'
+  import http from '@/http/http.js';
   import api from '@/assets/js/api.js';
   import {Loadmore} from 'mint-ui';
   import dialogBox from '@/components/common/dialogBox';
@@ -43,8 +43,7 @@
           dialogBoxData:{
             detailUrl:'',
             company:'',
-            logo:'',
-            activityType:''
+            logo:''
           }
         }},
       components: {
@@ -66,7 +65,7 @@
                 this.allLoaded = true;
                 this.loadContainerState = true;
               }
-            //  console.log(res.data);
+             console.log(res.data);
           });
             this.$nextTick(function () {
               this.scrollMode = "touch";
@@ -99,17 +98,43 @@
             umengClick(sort, operation, label,'','');
           },
           changedialogBoxData(detailUrl,company,logo,activityType){
-             this.dialogState=!this.dialogState;
-            this.dialogBoxData={
-              detailUrl:'',
-              company:'',
-              logo:'',
-              activityType:''
-            };
-            this.dialogBoxData.detailUrl=detailUrl;
-            this.dialogBoxData.company=company;
-            this.dialogBoxData.logo=logo;
-            this.dialogBoxData.activityType=activityType;
+
+           // if(activityType==10 || activityType==12) {
+            if(true){
+              this.dialogState = !this.dialogState;
+              this.dialogBoxData = {
+                detailUrl: '',
+                company: '',
+                logo: ''
+              };
+              this.dialogBoxData.detailUrl = detailUrl;
+              this.dialogBoxData.company = company;
+              this.dialogBoxData.logo = logo;
+
+            }else{
+              if(browserName=="WeChat"){
+                window.location.href=detailUrl;
+              }else{
+                var typeLink="";
+                if(detailUrl.indexOf("?") > 0 ){
+                  typeLink = detailUrl + '&token=' + localStorage.token;
+                }else{
+                  typeLink = detailUrl + '?token=' + localStorage.token;
+                }
+                let jsonObj={
+                  "jumpType":"InsideJump",
+                  "jumpUrl":typeLink
+                };
+                if (browserName == "WebKit") {  //判断iPhone|iPad|iPod|iOS
+                  window.webkit.messageHandlers.gotoNativeJump.postMessage(JSON.stringify(jsonObj));
+                } else if (browserName == "Chrome WebView") {   //判断Android
+                  RHNativeJS.gotoNativeJump(JSON.stringify(jsonObj));
+                }else{
+                  window.location.href=typeLink;
+                }
+              }
+            }
+
           },
           chaildDialogState(data){
             this.dialogState=false;

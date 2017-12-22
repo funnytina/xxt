@@ -5,12 +5,14 @@
       <section class='app_alr_lighten_section'>
         <div class='app_alr_lighten_title'>正在为你跳转{{company}}</div>
         <p class='app_alr_lighten_p'>您即将浏览{{company}}网页，请使用您的兜礼会员对应的手机号注册并登录购买，即可享受兜礼会员折扣。</p>
-        <input @click="applink()" class='single_close' type='button' value="我知道了">
+        <input @click="appLink(detailUrl,openOneNnumber,businessId)" class='single_close' type='button' value="我知道了">
       </section>
     </div>
   </div>
 </template>
 <script>
+  import api from '@/assets/js/api.js';
+  import http from '@/http/http.js';
     export default {
       name: "dialogBox",
       data(){
@@ -18,14 +20,76 @@
 
         }
       },
-      props:['detailUrl','company','logo','activityType','dialogState'],
+      props:['detailUrl','company','logo','activityType','dialogState','openOneNnumber','businessId'],
       methods:{
         appAlrClose:function () {
-          this.$emit("chaildChangeState",false)
-        },
-        applink:function () {
+          this.$emit("chaildChangeState",false);
 
+        },
+        // appLink(url){
+        //   window.location.href = url;
+        // }
+
+    appLink(link,openOneNnumber,businessId){
+      // alert("初始跳转链接"+link);
+      if(openOneNnumber==1){
+        //开通1号通 获取跳转链接
+       var link = this.getTargetUrl(link,businessId);
+        // alert(link);
+      }
+      if(browserName == "WeChat"){
+        window.location.href=link;
+      }else{
+        if(link.indexOf("doooly.com") > 0){
+          if(link.indexOf("?") > 0){
+           let jsonObj={
+              "jumpType":"InsideJump",
+              "jumpUrl":link+"&token="+localStorage.token
+            };
+          }else{
+           let jsonObj={
+              "jumpType":"InsideJump",
+              "jumpUrl":link+"?token="+localStorage.token
+            };
+
+          }
+        }else{
+          let jsonObj={
+            "jumpType":"InsideJump",
+            "jumpUrl":link
+          };
         }
+        if (browserName == "WebKit") {  //判断iPhone|iPad|iPod|iOS
+          window.webkit.messageHandlers.gotoNativeJump.postMessage(JSON.stringify(jsonObj));
+        } else if (browserName == "Chrome WebView") {   //判断Android
+          RHNativeJS.gotoNativeJump(JSON.stringify(jsonObj));
+        }
+        else{
+          window.location.href=link+'?token='+localStorage.token;
+        }
+
+      }
+    },
+
+     //热门商户免登录
+    getTargetUrl(link,businessId){
+      let resultUrl = null ;
+      http({
+        method: 'get',
+        url: api.getTargetUrl+'?token='+localStorage.token+'&businessId='+businessId+'&targetUrl='+link,
+          }).then((res) => {
+        if(res.data.code == 1000){
+          resultUrl = result.resultUrl;
+        }
+        if(res.data.code == 1001){
+         this.$toast("获取1号通跳转链接出错,请稍候重试!");
+        }
+      }).catch((err)=>{
+        this.$toast("服务器异常,请稍候重试!")
+      })
+      return resultUrl;
+    }
+
       }
     }
 </script>
