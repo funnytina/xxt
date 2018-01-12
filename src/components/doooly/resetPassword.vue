@@ -168,7 +168,8 @@
             if (browserName == "WeChat") {
               //修改密码成功，登录并进入首页
               // location.href ="${base}/wechat/home/index.jhtml?address=";
-              this.$router.push('home');
+             // this.$router.push('home');
+              this.$router.push({path: '/home/' + token})
             }
             else if (browserName == "WebKit") {
               //判断iPhone|iPad|iPod|iOS
@@ -245,7 +246,8 @@
         //   RHNativeJS.getPhoneDeviceId("phoneid");
         $('body').height($(window).height() + 150 + 'px');
         $('body').css('height', '110%');
-      }
+      };
+      document.title = '找回密码'
     }
   }
 </script>

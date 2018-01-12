@@ -19,13 +19,16 @@
       </ul>
 
     </section>
+    <!--<dyfooter></dyfooter>-->
   </div>
 </template>
 
 <script>
   import bus from '@/components/common/bus';
+  import dyfooter from '@/components/common/dyfooter';
   export default {
     name: "scan-discounts",
+    components:{dyfooter},
     data(){
       return{
         scanDatalist: [
@@ -128,7 +131,9 @@
         this.emitDate.miniLogo=miniLogo;
         this.emitDate.userId=userId;
         this.emitDate.groupShortName=groupShortName;
-        this.$router.push('scanDetail');
+        // this.$router.push('scanDetail');
+      this.$router.push({path:'/scanDetail'});
+
 
 
 
@@ -184,6 +189,16 @@
     },
     beforeDestroy(){
       bus.$emit('scan',this.emitDate);
+    },
+
+    created(){
+      // document.title = '{groupShortName}专享-扫码优惠';
+      // initTitle('${groupShortName}专享-扫码优惠');
+
+      document.title = '睿渠专享-扫码优惠';
+      initTitle('睿渠专享-扫码优惠',1);
+
+
     }
 
   }

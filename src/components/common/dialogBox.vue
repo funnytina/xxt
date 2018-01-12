@@ -147,7 +147,7 @@
   /*}*/
 
   .app_alr_lighten_section{
-    background: #f8f8f8 url(/static/images/alr_arc.jpg) no-repeat 0 0;
+    background: #f8f8f8 url(/src/assets/images/alr_arc.jpg) no-repeat 0 0;
     background-size: 100%;
     border-bottom-left-radius: 0.2rem;
     border-bottom-right-radius: 0.2rem;

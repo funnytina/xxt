@@ -1,4 +1,5 @@
 const api = {
+  baseURL: 'http://test1.doooly.com',
   checkMobile: '/reachtest/doooly/login/checkMobile.jhtml',
   getLoginVCode:'/reachtest/wechat/register/getLoginVCode.jhtml',
   getvcodepc:'/reachtest/doooly/password/getvcodepc.jhtml',
@@ -14,5 +15,19 @@ const api = {
   getTargetUrl:'/reachtest/wechat/oneNumber/getTargetUrl.jhtml',
  // freshDimensionUrl:'/reachtest/doooly/member/scan/freshDimensionUrl',
   freshDimensionUrl:'/reachtest/wechat/member/scan/freshDimensionUrl.jhtml',
+  dictDatas:'/reachtest/wechat/hotBusiness/dictDatas.jhtml',
+  first:'/reachtest/doooly/selfProduct/first.jhtml',
+  getCurrentTime:'/reachtest/doooly/selfProduct/getCurrentTime.jhtml',
+  inviteFamily:'/reachtest/doooly/familyInviteApp/inviteFamily.jhtml',
+  hotDataForAjax:'/reachtest/wechat/hotBusiness/hotDataForAjax.jhtml',
+  businessInfoForAjax:'/reachtest/wechat/hotBusiness/businessInfoForAjax.jhtml',
+  indexForAjax:'/reachtest/wechat/home/indexForAjax.jhtml',
+  detailForAjax:'/reachtest/wechat/selfProduct/detailForAjax.jhtml',
+  orderInfoForAjax:'/reachtest/doooly/orderDelivery/orderInfoForAjax.jhtml',
+  createOrder:'/reachtest/doooly/member/order/createOrder.jhtml',
+  cancleOrder:'/reachtest/doooly/member/order/cancleOrder',
+  toConfirmPaymentForAjax:'/reachtest/wechat/member/order/toConfirmPaymentForAjax.jhtml',
+  getPayForm:'/reachtest/doooly/member/pay/getPayForm.jhtml',
+  integralPayment:'/reachtest/doooly/member/pay/integralPayment.jhtml',
 };
 export default api;

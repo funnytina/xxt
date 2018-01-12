@@ -11,10 +11,21 @@ const http = axios.create({
   withCredentials: true
 });
 http.interceptors.request.use((req) => {
-  if (req.method === 'post') {
+  if (req.method === 'post'&& !req.notNeedTransfer) {
+
     req.data = qs.stringify(req.data)
 
   }
+  // if (req.method === 'post'&& !req.notNeedTransfer) {
+  //   console.log(121);
+  //   console.log(req);
+  //   req.data = qs.stringify(req.data)
+  //
+  // }
+  // else{
+  //   console.log(122);
+  //   console.log(req.data);
+  // }
   return req
 }, err => {
   return Promise.reject(err)

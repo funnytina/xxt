@@ -142,8 +142,15 @@
         },
       mounted(){
           this.loadFirstPage();
-      }
+      },
 
+      created(){
+       // document.title = '{groupName}专享-热门活动';
+       // initTitle('{groupName}专享-热门活动');
+
+        document.title = '睿渠专享-热门活动';
+        initTitle('睿渠专享-热门活动');
+      }
     }
 </script>
 

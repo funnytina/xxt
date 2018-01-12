@@ -64,10 +64,11 @@
 </template>
 
 <script>
-  import http from '@/http/http.js'
+  import http from '@/http/http.js';
+  import api from '@/assets/js/api.js';
   import {MessageBox} from 'mint-ui';
   import Cookies from 'js-cookie';
-  import api from '@/assets/js/api.js';
+
 
   export default {
     name: "login",
@@ -356,8 +357,8 @@
                  // let browserName = getBrowser();
                   if (res.data.code == "1000") {
                     if (browserName == "WeChat") {
-                      this.$router.push('home');
-                      //this.$router.push({path: '/home/' + token})
+                      //this.$router.push('home');
+                      this.$router.push({path: '/nav/home/' + token})
                     }
                     else if (browserName == "WebKit") {
 
@@ -379,7 +380,8 @@
                       // location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                       // [/#if]
                      // this.$router.push({path: '/home/' + token})
-                      this.$router.push({path: '/home'})
+                     // this.$router.push({path: '/home'})
+                      this.$router.push({path: '/nav/home/' + token})
                     }
                   }
                   else {
@@ -516,7 +518,8 @@
                   this.$router.push({path: 'redirectUrl'})
                 }
                 else {
-                  this.$router.push('home');
+                  //this.$router.push('home');
+                  this.$router.push({path: '/nav/home/' + token});
                 }
               }
               else if (browserName == "WebKit") {
@@ -538,7 +541,8 @@
                 //  [#else]
                 //  location.href ="${base}/wechat/home/index.jhtml?address=&token="+token;
                 //  [/#if]
-                this.$router.push({path: '/home'})
+                // this.$router.push({path: '/home'})
+                this.$router.push({path: '/nav/home/' + token});
               }
             }
             else {
@@ -620,6 +624,24 @@
       forgetPwd() {
         this.$router.push('resetPassword');
       },
+
+      appInit(){
+        if(browserName=="WebKit"){
+          window.webkit.messageHandlers.getPhoneDeviceId.postMessage("phoneid");
+        }
+        else if(browserName=="Chrome WebView"){
+          RHNativeJS.hideWaitPanel();
+          RHNativeJS.getPhoneDeviceId("phoneid");
+          $('body').css('height', '120%');
+        }
+
+      }
+    },
+    created(){
+      document.title = '会员登录';
+      initTitle('会员登录');
+      this.appInit();
+
     }
   }
 </script>

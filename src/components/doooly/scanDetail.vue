@@ -24,7 +24,8 @@
         <p>可用积分
           <span v-if="viewoffState" class="viewoff">******</span>
           <span v-if="!viewoffState" class="view">{{scanDetailDatalist.availablePoint}}</span>
-          <img id="viewImg" src="http://test1.doooly.com/resources/doooly/images/scan_discount/view_off.png">
+          <img v-if="viewoffState" id="viewImg" src="../../assets/images/view_off.png">
+          <img v-if="!viewoffState" id="viewImg" src="../../assets/images/view.png">
         </p>
       </div>
       <div class="checkMap">
@@ -135,6 +136,11 @@
       beforeDestroy () {
         bus.$off('scan');
         clearInterval(this.i);
+      },
+      created(){
+      document.title = '睿渠专享-扫码优惠';
+        initTitle('睿渠专享-扫码优惠');
+
       },
       mounted(){
           this.i= setInterval(this.refreshDimensionCode,60000);

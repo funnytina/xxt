@@ -6,6 +6,7 @@ import router from './router';
 import '../static/css/common.css'; //引入全局css
 import 'mint-ui/lib/style.css';
 import Mint from 'mint-ui';
+//import '../static/js/isWeiXin.js'
 import VueJsonp from 'vue-jsonp';
 import AMap from 'vue-amap';
 
@@ -16,6 +17,9 @@ AMap.initAMapApiLoader({
   key: 'b71258e6348a78d285e5645dda910d5a',
   plugin: ['AMap.Geocoder', 'AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
 });
+
+
+//console.log(dev)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

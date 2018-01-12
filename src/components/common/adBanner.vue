@@ -12,9 +12,10 @@
       'mt-swipe': Swipe,
       'mt-swipe-item': SwipeItem
     },
+    props:['items'],
     data() {
       return {
-        items: ['http://test1.doooly.com:8001/image/201709/10196c51-5d4c-4612-97a7-9ddca69aebae.png', 'http://test1.doooly.com:8001/image/201711/ff6c810a-91af-4ddc-a7c3-155a714f3972.jpg', 'http://test1.doooly.com:8001/image/201709/71e6cda4-0719-40f4-9ffd-285fb318861d.png'],
+       // items: ['http://test1.doooly.com:8001/image/201709/10196c51-5d4c-4612-97a7-9ddca69aebae.png', 'http://test1.doooly.com:8001/image/201711/ff6c810a-91af-4ddc-a7c3-155a714f3972.jpg', 'http://test1.doooly.com:8001/image/201709/71e6cda4-0719-40f4-9ffd-285fb318861d.png'],
 
       }
     }

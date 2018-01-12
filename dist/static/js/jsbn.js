@@ -1,3 +1,4 @@
+//import Vue from 'vue';
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
 // See "LICENSE" for details.

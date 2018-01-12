@@ -1,32 +1,41 @@
 <template>
   <div class="list">
-    <div class="title">
-      <!--<div class="line"></div>-->
-      <span>热门商户</span>
-    </div>
-    <div class="main-body" :style="{'-webkit-overflow-scrolling': scrollMode}">
-      <v-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore"
-                  :bottomDistance="bottomDistanceValue" bottomDropText="" bottomPullText="">
-        <ul class="mobile_ul">
-          <li v-for="(item,index) in listData" :key="index" @click="businessDetail(2,item.id)">
-            <img :src="item.logo">
-            <div class="left">
-              <span class="company">{{item.company}}</span><br>
-              <span class="describe">{{item.remarks}}</span><br>
-              <span class="discount"><i v-if="item.discount>0">最高<b>{{item.discount}}折</b></i><i
-                v-if="item.discount>0&&item.maxUserRebate>0">，</i><i v-if="item.maxUserRebate>0">最高返<b>{{item.maxUserRebate}}</b>积分</i></span>
-            </div>
-            <div class="fr">查看详情</div>
-          </li>
-          <div class="loadContainer" v-if="loadContainerState">
-            <div class="loadText"></div>
-            已经全部加载完毕
-            <div class="loadLine"></div>
-          </div>
-        </ul>
-        <div class="mint-loadmore-bottom"><img class="mint-loadmore-bottom-img" src="/static/images/loading.gif"></div>
-      </v-loadmore>
-    </div>
+    <!--<div class="title">-->
+      <!--&lt;!&ndash;<div class="line"></div>&ndash;&gt;-->
+      <!--<span>热门商户</span>-->
+    <!--</div>-->
+
+    <slot name="title"></slot>
+
+    <!--ul里面几个scoller就是无限滚动的几个api-->
+    <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="90" infinite-scroll-immediate-check="false">
+      <div v-if="loadGifState" class="mint-loadmore-bottom"><img class="mint-loadmore-bottom-img" src="../../assets/images/loading.gif"></div>
+      <!--li数据遍历循环部分-->
+      <!--<li class="mui-table-view-cell" v-for="(item,index) in listData" :key="index" @click="businessDetail(2,item.id)">-->
+      <li class="mui-table-view-cell" v-for="(item,index) in listData" :key="index" @click="businessDetail(item.dealType,item.id)">
+        <img :src="item.logo">
+        <div class="left">
+          <span class="company">{{item.company}}</span><br>
+          <span class="describe">{{item.remarks}}</span><br>
+          <span class="discount"><i v-if="item.discount>0">最高<b>{{item.discount}}折</b></i><i
+            v-if="item.discount>0&&item.maxUserRebate>0">，</i><i v-if="item.maxUserRebate>0">最高返<b>{{item.maxUserRebate}}</b>积分</i></span>
+        </div>
+        <div class="fr">查看详情</div>
+      </li>
+
+
+<div  v-show="!queryLoading">
+
+  <div class="loadContainer" v-if="allLoaded">
+          <div class="loadText"></div>
+          已经全部加载完毕
+          <div class="loadLine"></div>
+  </div>
+
+        <div v-show="moreLoading2&&!allLoaded" class="mint-loadmore-bottom"><img class="mint-loadmore-bottom-img" src="../../assets/images/loading.gif"></div>
+
+      </div>
+    </ul>
   </div>
 </template>
 
@@ -34,11 +43,12 @@
   import http from '@/http/http.js'
   import api from '@/assets/js/api.js';
   import {Loadmore} from 'mint-ui';
+  import Cookies from 'js-cookie';
   export default {
     name: "list",
     data() {
       return {
-        bottomDistanceValue: 70,
+        //bottomDistanceValue: 90,
         listData: [
           // {
           //   logo:"http://test1.doooly.com:8001/image/201512/00d7eba2-8d1a-440d-af20-35a80e557898.png",
@@ -51,78 +61,79 @@
           pageNo: "1",
           pageSize: "10"
         },
-        allLoaded: false, //是否可以上拉属性，false可以上拉，true为禁止上拉，就是不让往上划加载数据了
-        scrollMode: "auto", //移动端弹性滚动效果，touch为弹性滚动，auto是非弹性滚动
-        loadFinish: false,
-        loadContainerState: false
+      //  allLoaded: false, //是否可以上拉属性，false可以上拉，true为禁止上拉，就是不让往上划加载数据了
+       // scrollMode: "auto", //移动端弹性滚动效果，touch为弹性滚动，auto是非弹性滚动
+
+       // loadContainerState: false,
+        loadGifState:true,
+        queryLoading: false,
+        moreLoading: false,
+        allLoaded: false,
+        moreLoading2:false,
+
       }
     },
-    components: {
-      'v-loadmore': Loadmore
-    },
+    props: ['label'],
+    // components: {
+    //   'v-loadmore': Loadmore
+    // },
+    watch: {
+      label(curVal,oldVal){
+        console.log(curVal,oldVal);
+        console.log(222);
+        this.loadLabelDate();
+
+      }
+  },
     methods: {
       // url: api.hotDatas+'?address=\'上海\'&token='+this.$route.params.token+'&value=-1&company=""&pageNumber=1&pageSize=10',
-      joinHotdatasUrl(address, token, pageNumber, pageSize) {
-        return api.hotDatas + '?address=\'' + address + '\'&token=' + token + '&value=-1&company=""&pageNumber=' + pageNumber + '&pageSize=' + pageSize
+      joinHotdatasUrl(address, token,value,pageNumber, pageSize) {
+        return api.hotDatas + '?address=\'' + address + '\'&token=' + token + '&value='+value+'&company=""&pageNumber=' + pageNumber + '&pageSize=' + pageSize
       },
-      //商户详情跳转
-      businessDetail(dealType, id) {
-        //if(isWeiXin()){
-        //if(browserName == "WeChat"){
-        if (true) {
-          // window.location.href=$("#base").val()+'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token;
-          this.$router.push({
-            name: 'businessinfo',
-            params: {dealType1: dealType, id1: id, token: localStorage.token}
-          });
-        } else {
-          let jsonObj = {
-            "jumpType": "InsideJump",
-            //  "jumpUrl":$("#httpsBase").val()+'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
-            //   "jumpUrl":'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
-            "jumpUrl": '/wechat/hotBusiness/businessInfo.jhtml?dealType=' + dealType + '&id=' + id + '&userId=' + userId + '&token=' + localStorage.token
-          };
-          if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
-            window.webkit.messageHandlers.gotoNativeJump.postMessage(JSON.stringify(jsonObj));
-          } else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
-            RHNativeJS.gotoNativeJump(JSON.stringify(jsonObj));
-          }
-        }
+
+      loadMore() {
+
+        this.more();
+
       },
-      // 上拉加载
-      loadBottom() {
-        this.more();// 上拉触发的分页查询
-        this.$refs.loadmore.onBottomLoaded();// 固定方法，查询完要调用一次，用于重新定位
-      },
+
       //加载更多数据
       more: function () {
         // 分页查询
         this.searchCondition.pageNo = parseInt(this.searchCondition.pageNo) + 1;
+        this.moreLoading2=true;
         http({
           method: 'get',
-          url: this.joinHotdatasUrl('上海', localStorage.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
+          url: this.joinHotdatasUrl('上海', localStorage.token,this.label, this.searchCondition.pageNo, this.searchCondition.pageSize),
         }).then((res) => {
-          if (this.searchCondition.pageNo >= res.data.data.countPage) {
-            this.allLoaded = true;
-            this.loadContainerState = true;
-          }
+
           this.listData = this.listData.concat([...res.data.data.hotMerchantList]);
+          if (this.searchCondition.pageNo >= res.data.data.countPage) {
+            //  this.allLoaded = true;
+            // this.loadContainerState = true;
+            this.moreLoading=true;
+            this.allLoaded=true;
+            this.moreLoading2=false;
+
+          }
         });
       },
       //加载第一页数据
       loadPageList: function () {
+
         http({
           method: 'get',
-          url: this.joinHotdatasUrl('上海', localStorage.token, this.searchCondition.pageNo, this.searchCondition.pageSize),
+          url: this.joinHotdatasUrl('上海', localStorage.token,this.label, this.searchCondition.pageNo, this.searchCondition.pageSize),
         }).then((res) => {
+          this.loadGifState=false;
           this.listData = [...res.data.data.hotMerchantList];
           if (this.searchCondition.pageNo >= res.data.data.countPage) {
-            this.allLoaded = true;
-            this.loadContainerState = true;
+          //  this.allLoaded = true;
+           // this.loadContainerState = true;
+            this.moreLoading=true;
+            this.allLoaded=true;
           }
-          this.$nextTick(function () {
-            this.scrollMode = "touch";
-          });
+
         });
       },
       // 微信接口 打开微信接口
@@ -173,7 +184,53 @@
         } else {
           let address = data;
         }
-      }
+      },
+      loadLabelDate(){
+        http({
+          method: 'get',
+          url: api.hotDatas + '?address=\'' + '上海' + '\'&token=' + localStorage.token + '&value='+this.label
+        }).then((res) => {
+          this.loadGifState=false;
+          this.listData = [...res.data.data.hotMerchantList];
+        //  if (this.searchCondition.pageNo >= res.data.data.countPage) {
+            this.moreLoading=true;
+            this.allLoaded=true;
+            this.allLoaded=false;
+
+       //   }
+
+        });
+
+      },
+
+
+
+//商户详情跳转
+      businessDetail(dealType, id) {
+        //if(isWeiXin()){
+        //if(browserName == "WeChat"){
+        if (true) {
+          this.$router.push(
+            {
+              name: 'businessinfo',
+              params: {dealType1: dealType, id1: id, token: localStorage.token}
+            }
+          );
+        } else {
+          let jsonObj = {
+            "jumpType": "InsideJump",
+            //  "jumpUrl":$("#httpsBase").val()+'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
+            //   "jumpUrl":'/wechat/hotBusiness/businessInfo.jhtml?dealType='+dealType+'&id='+id+'&userId='+userId+'&token='+token
+            "jumpUrl": '/wechat/hotBusiness/businessInfo.jhtml?dealType=' + dealType + '&id=' + id + '&userId=' + userId + '&token=' + localStorage.token
+          };
+          if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
+            window.webkit.messageHandlers.gotoNativeJump.postMessage(JSON.stringify(jsonObj));
+          } else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
+            RHNativeJS.gotoNativeJump(JSON.stringify(jsonObj));
+          }
+        }
+      },
+
     },
     created() {
      //调用微信接口获取用户数据
@@ -194,7 +251,9 @@
       });
     },
     mounted() {
+
       this.loadPageList();
+
     }
   }
 </script>
@@ -238,8 +297,8 @@
 
   .list ul {
     font-size: 0;
-
-    margin-bottom: 0.8rem;
+    /*height:auto;*/
+    margin-bottom: 1rem;
   }
 
   .list ul li {
@@ -248,6 +307,12 @@
     border-bottom: 1px solid #ececec;
     position: relative;
   }
+
+  /*li{*/
+    /*padding:30px 0;*/
+    /*background-color: #ccc;*/
+    /*margin-bottom:20px;*/
+  /*}*/
 
   .list ul li img {
     margin-top: 0.3rem;
@@ -344,6 +409,7 @@
   .main-body {
     /*height: 5rem;*/
     overflow: scroll;
+    min-height: 10rem;
   }
 
   .loadContainer {
@@ -354,6 +420,7 @@
     background: #f5f5f5;
     color: #999;
     position: relative;
+
   }
 
   .loadText {

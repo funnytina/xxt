@@ -13,43 +13,44 @@
 <script>
   export default {
     name: "access-catagory",
+    props:['memberType'],
     data() {
       return {
         accessCatagoryData: [
           {
-            title: 'hotActivity',
+            title: '/hotActivity',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/hot.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/hot.png',
             accessCatagoryContent: '热门活动'
           },
           {
-            title: 'scanDiscounts',
+            title: '/nav/scanDiscounts',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/scan.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/scan.png',
             accessCatagoryContent: '扫码优惠'
           },
           {
-            title: 'discountTicket',
+            title: '/coupon',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/ticket.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/ticket.png',
             accessCatagoryContent: '优惠券'
           },
           {
-            title: 'telCharge',
+            title: '/telCharge',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/tel_charge.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/tel_charge.png',
             accessCatagoryContent: '手机充值'
           },
           {
-            title: 'cardBuy',
+            title: '/cardBuy',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/buy.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/buy.png',
             accessCatagoryContent: '卡券购买'
           },
           {
-            title: 'familyInvite',
+            title: '/familyInvite',
             accessCatagoryLink: '/doooly/hotActivity/toHotActivityIndex.jhtml',
-            accessCatagoryImgSrc: 'http://test1.doooly.com/resources/doooly/images/home/family.png',
+            accessCatagoryImgSrc: '/static/images/accessCatagory/family.png',
             accessCatagoryContent: '邀请亲友'
           }
         ]
@@ -57,12 +58,69 @@
     },
     methods: {
       linkAccess(name) {
-        this.$router.push({name: name});
-        console.log(name);
+
+        if(name=='/telCharge'){
+          this.$toast('正在升级');
+        }
+        else{
+
+          if(name=='/familyInvite')
+          {
+            if(this.memberType==0)
+            {
+              this.$router.push({path: name});
+            }
+            else if(this.memberType==1)
+          {
+               this.$toast('你已经是家属了')
+          }
+
+          }
+
+
+
+
+
+
+
+          else if(name=='/nav/scanDiscounts'){
+            window.location.href='http://test1.doooly.com/wechat/member/scan/list.jhtml?token='+localStorage.token
+          }
+
+          else if(name=='/coupon'){
+            window.location.href='http://test1.doooly.com/doooly/homeCoupon/businessList.jhtml?token='+localStorage.token
+          }
+
+          // else if(name=='/cardBuy'){
+          //   window.location.href='http://test1.doooly.com/doooly/selfProduct/list.jhtml?token='+localStorage.token
+          // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          else{
+        this.$router.push({path: name});
+          }
+        }
+
+        // console.log(1999);
+        // console.log(this.memberType);
       },
       umengClickAccess(label) {
         umengClick('', '首页bt', label, '', '');
-        console.log(999);
+        //console.log(999);
         // console.log(label);
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="include_footer">
     <ul>
-      <li v-for="(item,index) in footerTobarData" :key="index" @click="toLink(item.tobarLink)">
+      <li class="liCommon" v-for="(item,index) in footerTobarData" :key="index" :class="{liActive:isActive==index}" @click="toLink(item.tobarLink,index)" >
         <span :class="item.tobarIcon"></span><br>{{item.tobarContent}}
       </li>
     </ul>
@@ -9,53 +9,85 @@
 </template>
 
 <script>
+  import dyfooter from '@/components/common/dyfooter';
   export default {
     name: "dyfooter",
+
     data() {
       return {
         footerTobarData: [
           {
-            tobarLink: '/wechat/home/index.jhtml',
+            tobarLink: '/home/'+localStorage.token,
             tobarIcon: 'icon-index',
             tobarContent: '首页'
           },
           {
-            tobarLink: '/wechat/hotBusiness/hotMerchat.jhtml',
+            tobarLink: '/hotMerchat',
             tobarIcon: 'icon-company',
             tobarContent: '热门商户'
           },
           {
-            tobarLink: '/wechat/member/scan/list.jhtml',
+            tobarLink: '/scanDiscounts',
             tobarIcon: 'icon-scan',
             tobarContent: '扫码优惠'
           },
           {
-            tobarLink: '/wechat/myaccount/getUserInfo.jhtml',
+            tobarLink: '/userInfo',
             tobarIcon: 'icon-center',
             tobarContent: '个人中心'
           }
-        ]
+        ],
+        isActive:0,
       }
     },
     methods: {
-      toLink(tobarLink) {
-        this.$router.push({
-          path: tobarLink
-        })
+      toLink(tobarLink,tobarContent) {
+
+        if(tobarContent==3)
+        {
+          window.location.href='http://test1.doooly.com/wechat/myaccount/getUserInfo.jhtml?token='+localStorage.token
+        }
+        else if(tobarContent==2){
+          window.location.href='http://test1.doooly.com/wechat/member/scan/list.jhtml?token='+localStorage.token
+        }
+        else{
+        this.isActive=tobarContent;
+         this.$router.push({
+          path: '/nav'+tobarLink
+        });
+        }
+       // this.isActive=tobarContent;
+      console.log(tobarLink,tobarContent);
+       console.log(this.isActive==tobarContent);
       }
+    },
+    create(){
+      console.log(222);
+      console.log(index);
     }
   }
 </script>
 
 <style scoped>
 
+  /*@font-face {*/
+    /*font-family: 'icomoon';*/
+    /*src: url('../../static/fonts/icomoon.eot?l4zkg0');*/
+    /*src: url('../../static/fonts/icomoon.eot?l4zkg0#iefix') format('embedded-opentype'),*/
+    /*url('../../static/fonts/icomoon.ttf?l4zkg0') format('truetype'),*/
+    /*url('../../static/fonts/icomoon.woff?l4zkg0') format('woff'),*/
+    /*url('../../static/fonts/icomoon.svg?l4zkg0#icomoon') format('svg');*/
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
+
+
   @font-face {
     font-family: 'icomoon';
-    src: url('/static/fonts/icomoon.eot?l4zkg0');
-    src: url('/static/fonts/icomoon.eot?l4zkg0#iefix') format('embedded-opentype'),
-    url('/static/fonts/icomoon.ttf?l4zkg0') format('truetype'),
-    url('/static/fonts/icomoon.woff?l4zkg0') format('woff'),
-    url('/static/fonts/icomoon.svg?l4zkg0#icomoon') format('svg');
+    src: url('../../assets/fonts/icomoon.eot?l4zkg0');
+    src: url('../../assets/fonts/icomoon.eot?l4zkg0#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/icomoon.ttf?l4zkg0') format('truetype'),
+    url('../../assets/fonts/icomoon.woff?l4zkg0') format('woff'),
+    url('../../assets/fonts/icomoon.svg?l4zkg0#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
   }
@@ -114,7 +146,17 @@
     text-align: center;
   }
 
-  .include_footer ul li {
+  /*.include_footer ul li {*/
+    /*display: inline-block;*/
+    /*font-size: 0.24rem;*/
+    /*line-height: 0.3rem;*/
+    /*color: #7d7d7d;*/
+    /*width: 1.8rem;*/
+    /*text-align: center;*/
+    /*padding-top: 0.18rem;*/
+  /*}*/
+
+  .liCommon {
     display: inline-block;
     font-size: 0.24rem;
     line-height: 0.3rem;
@@ -124,11 +166,7 @@
     padding-top: 0.18rem;
   }
 
-  /*.include_footer ul li.check{*/
-  /*color: #ee3f44;*/
-  /*}*/
-
-  .include_footer ul li:active {
+.liActive {
     color: #ee3f44;
   }
 
